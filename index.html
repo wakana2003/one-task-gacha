@@ -109,6 +109,31 @@
   </div>
 </div>
 
+<!-- ===== EDIT MODAL ===== -->
+<div class="modal-overlay" id="editModal">
+  <div class="modal-sheet">
+    <div class="modal-drag"></div>
+    <p class="edit-title">✏️ タスクを編集</p>
+    <div class="section-label"><span class="bar" style="background:var(--pink)"></span>タスク名</div>
+    <input type="text" id="editText" class="edit-input" maxlength="50">
+    <div class="section-label"><span class="bar" style="background:var(--mint)"></span>ジャンル</div>
+    <div class="chip-row" id="editCatChips"></div>
+    <div class="section-label"><span class="bar" style="background:var(--yellow)"></span>かかる時間の目安</div>
+    <div class="chip-row" id="editTimeChips"></div>
+    <div class="section-label"><span class="bar" style="background:var(--blue)"></span>くり返し</div>
+    <div class="chip-row" id="editFreqChips"></div>
+    <div class="section-label"><span class="bar" style="background:var(--purple)"></span>〆切（設定すると一回きりのタスクになります）</div>
+    <div class="edit-due-row">
+      <input type="date" id="editDue" class="edit-input">
+      <button class="btn btn-secondary" id="editDueClear">〆切なし</button>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-primary" id="editSaveBtn">保存する</button>
+      <button class="btn btn-ghost" id="editCancelBtn">キャンセル</button>
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <!-- 読み込み順が大事: 状態 → タスク → ガチャ → 図鑑 → 演出 → 音声 → 初期化 -->
