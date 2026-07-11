@@ -175,7 +175,7 @@ body{
 }
 .modal-overlay.show{display:flex;}
 .modal-sheet{
-  width:100%; max-width:480px;
+  width:100%; max-width:800px;
   background:var(--panel);
   border:1px solid var(--panel-edge);
   border-top-left-radius:26px; border-top-right-radius:26px;
@@ -382,3 +382,18 @@ body{
   z-index:300;
 }
 @keyframes fall{ to{ transform:translateY(110vh) rotate(720deg); opacity:.3; } }
+/* ---------- Dot animal images ---------- */
+.dex-img{
+  width:86%; height:86%;
+  object-fit:contain;
+  image-rendering:pixelated;
+}
+.get-img{
+  width:96px; height:96px;
+  object-fit:contain;
+  image-rendering:pixelated;
+  animation:dropIn .5s cubic-bezier(.3,1.4,.5,1);
+}
+.get-img.rare{
+  filter:drop-shadow(0 0 14px rgba(255,216,77,.8));
+}
