@@ -157,15 +157,16 @@ function completeCurrentTask() {
   clearInterval(timerInterval);
   $('timerBar').classList.remove('show');
 
-  // 図鑑への追加
-  let emoji;
+  // 図鑑への追加（獲得するのはドット動物の画像）
+  let img;
   const isRare = currentPick.isJackpot;
   if (isRare) {
-    emoji = RARE_POOL[Math.floor(Math.random() * RARE_POOL.length)];
-    state.rareDex[emoji] = (state.rareDex[emoji] || 0) + 1;
+    img = RARE_POOL[Math.floor(Math.random() * RARE_POOL.length)];
+    state.rareDex[img] = (state.rareDex[img] || 0) + 1;
   } else {
-    emoji = CHAR_POOL[Math.floor(Math.random() * CHAR_POOL.length)];
-    const key = currentPick.category + '|' + emoji;
+    const pool = DEX_POOL[currentPick.category] || DEX_POOL['その他'];
+    img = pool[Math.floor(Math.random() * pool.length)];
+    const key = currentPick.category + '|' + img;
     state.dex[key] = (state.dex[key] || 0) + 1;
   }
 
@@ -198,7 +199,8 @@ function completeCurrentTask() {
   st.todayCount += 1;
   save();
 
-  $('completeEmoji').textContent = emoji;
+  $('completeEmoji').innerHTML =
+    `<img src="${img}" alt="獲得したどうぶつ" class="get-img${isRare ? ' rare' : ''}">`;
   $('completeSub').textContent = isRare
     ? 'レアカプセルだ…！おつかれさま'
     : `「${currentPick.text}」やりきった！`;
