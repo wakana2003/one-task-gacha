@@ -3,70 +3,121 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ONEタスク ガチャ</title>
+<title>タスクガチャ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;500;700;800&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<div class="app">
-  <header>
-    <h1>🎰 ONEタスク ガチャ</h1>
-    <p>今やることは、ガチャが決める。</p>
-  </header>
-
-  <div class="stats">
-    <div class="stat"><div class="num" id="todayCount">0</div><div class="label">今日のガチャ</div></div>
-    <div class="stat"><div class="num" id="totalCount">0</div><div class="label">累計ガチャ</div></div>
-    <div class="stat"><div class="num" id="doneCount">0</div><div class="label">完了タスク</div></div>
+<div class="app" id="app">
+  <div class="app-header">
+    <p class="app-title">🎰 タスクガチャ</p>
+    <p class="app-sub">今できる分だけ、ランダムに一個だけ選ぶ</p>
   </div>
 
-  <!-- カテゴリ切り替えタブ（JSが生成） -->
-  <div class="cat-tabs" id="catTabs"></div>
-
-  <div class="machine">
-    <div class="capsule" id="capsule">🔮</div>
-    <div class="roulette" id="roulette"></div>
+  <!-- ===== GACHA TAB ===== -->
+  <div class="tab-panel active" id="tab-gacha">
+    <div id="timerBar" class="timer-bar">
+      <div class="timer-dot"></div>
+      <div class="timer-info">
+        <div class="timer-task" id="timerTaskText">-</div>
+        <div class="timer-clock" id="timerClock">00:00</div>
+      </div>
+      <button class="timer-done-btn" id="timerDoneBtn">完了にする</button>
+    </div>
+    <div class="machine-wrap" id="machineWrap"></div>
+    <div class="section-label"><span class="bar" style="background:var(--pink)"></span>ジャンルを選ぶ</div>
+    <div class="chip-row" id="catChips"></div>
+    <div class="section-label"><span class="bar" style="background:var(--yellow)"></span>今、使える時間は？</div>
+    <div class="chip-row" id="timeChips"></div>
+    <button class="pull-btn" id="pullBtn">🎲 レバーを引く</button>
+    <p class="pull-hint" id="pullHint">条件に合うタスクからランダムで1つ選びます</p>
   </div>
 
-  <button class="pull-btn" id="pullBtn">ガチャを引く</button>
-
-  <div class="result" id="result">
-    <!-- 引いた直後の表示 -->
-    <div id="resultView">
-      <span class="badge">今やること</span>
-      <div class="task-name" id="resultName"></div>
-      <div class="actions">
-        <button class="done-btn" id="doneBtn">✅ 完了！</button>
+  <!-- ===== TASKS TAB ===== -->
+  <div class="tab-panel" id="tab-tasks">
+    <div class="section-label" style="margin-top:6px"><span class="bar" style="background:var(--mint)"></span>新しいタスクを追加</div>
+    <div class="card">
+      <div class="task-form">
+        <div class="form-row">
+          <input type="text" id="newTaskText" placeholder="例）洗濯物をたたむ">
+          <button class="mic-btn" id="micBtn" title="音声で追加">🎤</button>
+        </div>
+        <p class="voice-hint">🎤で「家事で 毎週 30分で 風呂掃除」「金曜までに レポートを出す」のように話すと自動登録</p>
+        <div class="section-label" style="margin:2px 2px 2px;font-size:11px;">ジャンル</div>
+        <div class="chip-row" id="newTaskCatChips"></div>
+        <div class="section-label" style="margin:2px 2px 2px;font-size:11px;">かかる時間の目安</div>
+        <div class="chip-row" id="newTaskTimeChips"></div>
+        <button class="add-btn" id="addTaskBtn">＋ 追加する</button>
       </div>
     </div>
-    <!-- 完了後の「次はいつ？」スライダー -->
-    <div id="scheduleView">
-      <div class="sch-title">🎉 完了！次に出すのはいつ？</div>
-      <input type="range" id="schRange" min="1" max="14" step="1" value="1">
-      <div class="sch-label" id="schLabel">明日</div>
-      <button class="sch-ok" id="schOkBtn">これでOK</button>
-    </div>
+    <div class="section-label"><span class="bar" style="background:var(--blue)"></span>登録済みタスク一覧</div>
+    <div id="taskList"></div>
   </div>
 
-  <section class="tasks">
-    <div class="tasks-header">
-      <h2>📝 タスク一覧</h2>
-      <button class="toggle-btn" id="toggleBtn">隠す</button>
+  <!-- ===== COLLECTION TAB ===== -->
+  <div class="tab-panel" id="tab-collection">
+    <div class="stats-row">
+      <div class="stat-box"><div class="stat-num" id="statToday">0</div><div class="stat-label">今日の達成</div></div>
+      <div class="stat-box"><div class="stat-num" id="statTotal">0</div><div class="stat-label">累計カプセル</div></div>
+      <div class="stat-box"><div class="stat-num" id="statStreak">0</div><div class="stat-label">連続日数</div></div>
     </div>
-    <div class="add-row">
-      <select id="taskCat"></select>
-      <input type="text" id="taskInput" placeholder="タスクを追加（例：机の上を片付ける）" maxlength="50">
-      <button id="addBtn">＋</button>
-    </div>
-    <ul id="taskList"></ul>
-    <div class="empty-msg" id="emptyMsg">タスクを追加するとガチャが引けます</div>
-  </section>
+    <div class="section-label"><span class="bar" style="background:var(--gold)"></span>レアカプセル（大当たり産）</div>
+    <div class="card"><div class="rare-row" id="rareRow"></div></div>
+    <div id="dexContainer"></div>
+  </div>
+
+  <div class="bottom-nav">
+    <button class="nav-btn active" data-tab="gacha"><span class="icon">🎰</span>ガチャ</button>
+    <button class="nav-btn" data-tab="tasks"><span class="icon">📝</span>タスク</button>
+    <button class="nav-btn" data-tab="collection"><span class="icon">🗂️</span>図鑑</button>
+  </div>
 </div>
 
-<!-- 読み込み順が大事: 状態 → タスク → ガチャ → 演出 → 初期化 -->
+<!-- ===== RESULT MODAL ===== -->
+<div class="modal-overlay" id="resultModal">
+  <div class="modal-sheet">
+    <div class="modal-drag"></div>
+    <div class="reveal-stage">
+      <div class="capsule-big" id="revealCapsule"></div>
+    </div>
+    <div class="result-card" id="resultCard">
+      <div id="jackpotBanner" style="display:none" class="jackpot-banner">✨ 大当たり！ラッキータスク ✨</div>
+      <span class="task-badge" id="resultBadge"></span>
+      <p class="result-title" id="resultTitle">-</p>
+      <div class="result-meta">
+        <span id="resultTime">-</span>
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-primary" id="startTaskBtn">これをやる</button>
+        <button class="btn btn-secondary" id="rerollBtn">🔄 もう一回引く</button>
+        <button class="btn btn-ghost" id="skipBtn">今回はスキップする</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== COMPLETE MODAL ===== -->
+<div class="modal-overlay" id="completeModal">
+  <div class="modal-sheet" style="text-align:center;">
+    <div class="modal-drag"></div>
+    <p style="font-size:48px;margin:10px 0 6px;" id="completeEmoji">🎉</p>
+    <p style="font-family:var(--font-display);font-weight:800;font-size:18px;margin:0 0 4px;">カプセル獲得！</p>
+    <p style="font-size:13px;color:var(--text-dim);margin:0 0 18px;" id="completeSub">よく頑張りました</p>
+    <button class="btn btn-primary" id="completeCloseBtn">図鑑を見にいく</button>
+    <button class="btn btn-ghost" id="completeCloseBtn2" style="margin-top:8px;">閉じる</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<!-- 読み込み順が大事: 状態 → タスク → ガチャ → 図鑑 → 演出 → 音声 → 初期化 -->
 <script src="js/storage.js"></script>
 <script src="js/tasks.js"></script>
 <script src="js/gacha.js"></script>
+<script src="js/dex.js"></script>
 <script src="js/confetti.js"></script>
+<script src="js/voice.js"></script>
 <script src="js/main.js"></script>
 </body>
 </html>

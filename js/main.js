@@ -1,43 +1,56 @@
 // ============================================
-// main.js — イベント登録と初期表示
+// main.js — タブ切り替え・イベント登録・初期化
 // ============================================
 
-// タスク追加
-$('addBtn').onclick = addTask;
-$('taskInput').addEventListener('keydown', e => { if (e.key === 'Enter') addTask(); });
+function switchTab(name) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  $('tab-' + name).classList.add('active');
+  document.querySelector(`.nav-btn[data-tab="${name}"]`).classList.add('active');
+}
 
-// 一覧の表示/非表示
-$('toggleBtn').onclick = () => {
-  const ul = $('taskList');
-  ul.classList.toggle('hidden');
-  $('toggleBtn').textContent = ul.classList.contains('hidden') ? '見る' : '隠す';
+// ---- 初期描画 ----
+renderMachine();
+renderCatChips();
+renderTimeChips();
+renderNewTaskCatChips();
+renderNewTaskTimeChips();
+renderTaskList();
+renderStats();
+renderDex();
+updatePullHint();
+save();
+
+// ---- イベント ----
+document.querySelectorAll('.nav-btn').forEach(b => {
+  b.onclick = () => switchTab(b.dataset.tab);
+});
+
+$('pullBtn').onclick = () => {
+  const machine = $('machineWrap');
+  machine.style.transition = 'transform .08s';
+  machine.style.transform = 'translateX(-4px) rotate(-1deg)';
+  setTimeout(() => { machine.style.transform = 'translateX(4px) rotate(1deg)'; }, 80);
+  setTimeout(() => { machine.style.transform = 'translateX(0) rotate(0)'; }, 160);
+  setTimeout(pullGacha, 220);
 };
 
-// ガチャ
-$('pullBtn').onclick = pull;
-$('doneBtn').onclick = completeTask;
+$('startTaskBtn').onclick = startTimer;
+$('rerollBtn').onclick = pullGacha;
+$('skipBtn').onclick = () => {
+  closeResultModal();
+  toast('スキップしました。気が向いたらまた引いてね');
+};
+$('timerDoneBtn').onclick = completeCurrentTask;
 
-// 「次はいつ？」スライダー
-$('schRange').addEventListener('input', () => {
-  $('schLabel').textContent = fmtDays(parseInt($('schRange').value, 10));
-});
-$('schOkBtn').onclick = confirmSchedule;
+$('addTaskBtn').onclick = addTask;
+$('newTaskText').addEventListener('keydown', e => { if (e.key === 'Enter') addTask(); });
+$('micBtn').onclick = startVoice;
 
-// ---- 初期表示 ----
-// 未完了のまま閉じていたら、引いたタスクを復元してロック継続
-if (state.currentId !== null) {
-  const t = state.tasks.find(x => x.id === state.currentId);
-  if (t) {
-    currentTask = t;
-    $('capsule').textContent = '✨';
-    $('resultName').textContent = t.name;
-    $('result').style.display = 'block';
-  } else {
-    state.currentId = null;
-  }
-}
-save();
-renderStats();
-renderCatTabs();
-renderCatSelect();
-renderTasks();
+$('completeCloseBtn').onclick = () => {
+  $('completeModal').classList.remove('show');
+  switchTab('collection');
+};
+$('completeCloseBtn2').onclick = () => {
+  $('completeModal').classList.remove('show');
+};
