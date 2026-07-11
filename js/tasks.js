@@ -112,8 +112,10 @@ function renderTaskList() {
         <div class="task-text">${escapeHtml(t.text)}</div>
         <div class="task-tags">${tags}</div>
       </div>
-      <button class="task-del" data-id="${t.id}">✕</button>
+      <button class="task-edit" data-id="${t.id}" title="編集">✏️</button>
+      <button class="task-del" data-id="${t.id}" title="削除">✕</button>
     `;
+    row.querySelector('.task-edit').onclick = () => openEditModal(t.id);
     row.querySelector('.task-del').onclick = () => deleteTask(t.id);
     el.appendChild(row);
   });
@@ -135,6 +137,99 @@ function addTask() {
   registerTask({ text, category: newTaskCat, minutes: newTaskTime, freq: 1, due: null });
   input.value = '';
   toast('タスクを追加しました 🎉');
+}
+
+// ---- 編集モーダル ----
+let editingId = null;
+let editCat = null;
+let editMin = null;
+let editFreq = null;
+const FREQ_OPTIONS = [
+  { id: 0,  label: '一回きり' },
+  { id: 1,  label: '毎日' },
+  { id: 3,  label: '3日ごと' },
+  { id: 7,  label: '週1' },
+  { id: 14, label: '2週ごと' },
+  { id: 30, label: '毎月' },
+];
+
+function openEditModal(id) {
+  const t = state.tasks.find(x => x.id === id);
+  if (!t) return;
+  editingId = id;
+  editCat = t.category;
+  editMin = t.minutes;
+  editFreq = t.freq;
+  $('editText').value = t.text;
+  $('editDue').value = t.due || '';
+  renderEditChips();
+  $('editModal').classList.add('show');
+}
+
+function renderEditChips() {
+  // ジャンル
+  const catEl = $('editCatChips');
+  catEl.innerHTML = '';
+  CATEGORIES.forEach(c => {
+    const chip = document.createElement('button');
+    chip.className = 'chip' + (editCat === c.id ? ' selected' : '');
+    chip.dataset.cat = c.id;
+    chip.textContent = `${c.emoji} ${c.id}`;
+    chip.onclick = () => { editCat = c.id; renderEditChips(); };
+    catEl.appendChild(chip);
+  });
+  // 時間（登録値がプリセットにない場合はそれも表示）
+  const mins = [5, 10, 15, 30, 45, 60, 90];
+  if (!mins.includes(editMin)) mins.push(editMin);
+  const timeEl = $('editTimeChips');
+  timeEl.innerHTML = '';
+  mins.sort((a, b) => a - b).forEach(m => {
+    const chip = document.createElement('button');
+    chip.className = 'chip time' + (editMin === m ? ' selected' : '');
+    chip.textContent = m + '分';
+    chip.onclick = () => { editMin = m; renderEditChips(); };
+    timeEl.appendChild(chip);
+  });
+  // くり返し
+  const freqEl = $('editFreqChips');
+  freqEl.innerHTML = '';
+  const opts = FREQ_OPTIONS.slice();
+  if (!opts.some(o => o.id === editFreq)) opts.push({ id: editFreq, label: freqText(editFreq) });
+  opts.forEach(o => {
+    const chip = document.createElement('button');
+    chip.className = 'chip' + (editFreq === o.id ? ' selected' : '');
+    if (editFreq === o.id) chip.dataset.cat = 'all'; // 選択色を流用
+    chip.textContent = o.label;
+    chip.onclick = () => {
+      editFreq = o.id;
+      if (o.id !== 0) $('editDue').value = ''; // くり返しにしたら〆切は外す
+      renderEditChips();
+    };
+    freqEl.appendChild(chip);
+  });
+}
+
+function saveEdit() {
+  const t = state.tasks.find(x => x.id === editingId);
+  if (!t) { closeEditModal(); return; }
+  const text = $('editText').value.trim();
+  if (!text) { toast('タスク名を入力してください'); return; }
+  t.text = text;
+  t.category = editCat;
+  t.minutes = editMin;
+  const due = $('editDue').value || null;
+  t.due = due;
+  t.freq = due ? 0 : (editFreq === 0 && !due ? 0 : editFreq); // 〆切があれば一回きり
+  save();
+  closeEditModal();
+  renderTaskList();
+  updatePullHint();
+  toast('タスクを更新しました ✏️');
+}
+
+function closeEditModal() {
+  editingId = null;
+  $('editModal').classList.remove('show');
 }
 
 // 追加処理の共通口
