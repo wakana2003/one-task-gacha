@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ONEタスク ガチャ</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="app">
+  <header>
+    <h1>🎰 ONEタスク ガチャ</h1>
+    <p>今やることは、ガチャが決める。</p>
+  </header>
+
+  <div class="stats">
+    <div class="stat"><div class="num" id="todayCount">0</div><div class="label">今日のガチャ</div></div>
+    <div class="stat"><div class="num" id="totalCount">0</div><div class="label">累計ガチャ</div></div>
+    <!-- <div class="stat"><div class="num" id="doneCount">0</div><div class="label">完了タスク</div></div> -->
+  </div>
+
+  <div class="machine">
+    <div class="capsule" id="capsule">🔮</div>
+    <div class="roulette" id="roulette"></div>
+  </div>
+
+  <button class="pull-btn" id="pullBtn">ガチャを引く</button>
+
+  <div class="result" id="result">
+    <span class="badge">今やること</span>
+    <div class="task-name" id="resultName"></div>
+    <div class="actions">
+      <button class="done-btn" id="doneBtn">✅ 完了！</button>
+    </div>
+  </div>
+
+  <section class="tasks">
+    <div class="tasks-header">
+      <h2>📝 タスク一覧</h2>
+      <button class="toggle-btn" id="toggleBtn">隠す</button>
+    </div>
+    <div class="add-row">
+      <input type="text" id="taskInput" placeholder="タスクを追加（例：机の上を片付ける）" maxlength="50">
+      <button id="addBtn">＋</button>
+    </div>
+    <ul id="taskList"></ul>
+    <div class="empty-msg" id="emptyMsg">タスクを追加するとガチャが引けます</div>
+    <div class="reset-row"><button id="resetBtn">完了タスクをリセット（新しい1日を始める）</button></div>
+  </section>
+</div>
+
+<!-- 読み込み順が大事: 状態 → タスク → ガチャ → 演出 → 初期化 -->
+<script src="js/storage.js"></script>
+<script src="js/tasks.js"></script>
+<script src="js/gacha.js"></script>
+<script src="js/confetti.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>

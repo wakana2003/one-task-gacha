@@ -1,0 +1,209 @@
+:root {
+  --bg1: #1a1a2e;
+  --bg2: #16213e;
+  --accent: #e94560;
+  --gold: #ffd166;
+  --teal: #4ecdc4;
+  --card: #ffffff;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: "Hiragino Sans", "Yu Gothic", sans-serif;
+  background: linear-gradient(160deg, var(--bg1), var(--bg2));
+  min-height: 100vh;
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  padding: 24px 16px 60px;
+}
+.app { width: 100%; max-width: 420px; }
+header { text-align: center; margin-bottom: 16px; }
+header h1 { font-size: 1.5rem; letter-spacing: 2px; }
+header p { font-size: .8rem; opacity: .7; margin-top: 4px; }
+
+/* 記録バー */
+.stats {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+.stat {
+  flex: 1;
+  background: rgba(255,255,255,.08);
+  border-radius: 12px;
+  padding: 10px 4px;
+  text-align: center;
+}
+.stat .num { font-size: 1.3rem; font-weight: bold; color: var(--gold); }
+.stat .label { font-size: .65rem; opacity: .75; margin-top: 2px; }
+
+/* ガチャマシン */
+.machine {
+  text-align: center;
+  margin-bottom: 20px;
+  position: relative;
+}
+.capsule {
+  font-size: 90px;
+  display: inline-block;
+  filter: drop-shadow(0 6px 12px rgba(0,0,0,.4));
+  transition: transform .2s;
+  cursor: default;
+  user-select: none;
+}
+.capsule.shaking { animation: shake .12s infinite; }
+.capsule.pop { animation: pop .5s ease-out; }
+@keyframes shake {
+  0% { transform: rotate(-12deg) translateX(-4px); }
+  50% { transform: rotate(12deg) translateX(4px); }
+  100% { transform: rotate(-12deg) translateX(-4px); }
+}
+@keyframes pop {
+  0% { transform: scale(.3); }
+  60% { transform: scale(1.25); }
+  100% { transform: scale(1); }
+}
+.roulette {
+  height: 1.4em;
+  font-size: 1rem;
+  opacity: .8;
+  margin-top: 8px;
+  letter-spacing: 1px;
+}
+
+button {
+  font-family: inherit;
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: transform .1s, filter .15s;
+}
+button:active { transform: scale(.95); }
+.pull-btn {
+  display: block;
+  width: 100%;
+  padding: 16px;
+  font-size: 1.15rem;
+  font-weight: bold;
+  color: #fff;
+  background: linear-gradient(135deg, var(--accent), #ff7b54);
+  box-shadow: 0 6px 20px rgba(233,69,96,.45);
+  letter-spacing: 2px;
+}
+.pull-btn:disabled { filter: grayscale(.8); cursor: not-allowed; box-shadow: none; }
+
+/* 結果カード */
+.result {
+  display: none;
+  background: var(--card);
+  color: #222;
+  border-radius: 20px;
+  padding: 24px 20px;
+  margin-top: 20px;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(0,0,0,.4);
+  animation: cardIn .45s cubic-bezier(.2,1.4,.4,1);
+}
+@keyframes cardIn {
+  from { transform: translateY(30px) scale(.85); opacity: 0; }
+  to { transform: none; opacity: 1; }
+}
+.result .badge {
+  display: inline-block;
+  font-size: .7rem;
+  font-weight: bold;
+  color: #fff;
+  background: var(--teal);
+  padding: 3px 12px;
+  border-radius: 999px;
+  margin-bottom: 10px;
+}
+.result .task-name { font-size: 1.4rem; font-weight: bold; line-height: 1.4; }
+.result .actions { display: flex; gap: 10px; margin-top: 18px; }
+.result .actions button {
+  flex: 1;
+  padding: 12px;
+  font-size: .95rem;
+  font-weight: bold;
+}
+.done-btn { background: var(--teal); color: #fff; }
+.retry-btn { background: #eee; color: #555; }
+
+/* タスク管理 */
+section.tasks {
+  margin-top: 32px;
+  background: rgba(255,255,255,.06);
+  border-radius: 16px;
+  padding: 16px;
+}
+.tasks-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+.tasks-header h2 { font-size: .95rem; }
+.toggle-btn {
+  background: rgba(255,255,255,.15);
+  color: #fff;
+  font-size: .75rem;
+  padding: 5px 12px;
+}
+.add-row { display: flex; gap: 8px; margin-bottom: 12px; }
+.add-row input {
+  flex: 1;
+  border: none;
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-size: .95rem;
+  font-family: inherit;
+}
+.add-row button {
+  background: var(--gold);
+  color: #333;
+  font-weight: bold;
+  padding: 0 18px;
+  font-size: 1.1rem;
+}
+ul#taskList { list-style: none; }
+ul#taskList.hidden { display: none; }
+ul#taskList li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255,255,255,.08);
+  border-radius: 10px;
+  padding: 8px 12px;
+  margin-bottom: 6px;
+  font-size: .9rem;
+}
+ul#taskList li.done { opacity: .45; text-decoration: line-through; }
+ul#taskList li .name { flex: 1; }
+ul#taskList li button {
+  background: none;
+  color: #fff;
+  opacity: .6;
+  font-size: .9rem;
+  padding: 2px 6px;
+}
+.reset-row { text-align: center; margin-top: 10px; }
+.reset-row button {
+  background: none;
+  color: var(--teal);
+  font-size: .8rem;
+  text-decoration: underline;
+}
+.empty-msg { font-size: .8rem; opacity: .6; text-align: center; padding: 8px; }
+
+/* 紙吹雪 */
+.confetti {
+  position: fixed;
+  top: -10px;
+  font-size: 18px;
+  pointer-events: none;
+  animation: fall linear forwards;
+  z-index: 99;
+}
+@keyframes fall {
+  to { transform: translateY(110vh) rotate(720deg); opacity: .3; }
+}
