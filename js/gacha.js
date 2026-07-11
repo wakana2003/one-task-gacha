@@ -2,11 +2,22 @@
 // gacha.js — ガチャの抽選・演出・完了処理
 // ============================================
 
+// 「次はいつ？」スライダーの対象タスク
+let scheduleTarget = null;
+
+// 結果カードを初期状態（今やること表示）に戻す
+function resetResultCard() {
+  $('result').style.display = 'none';
+  $('resultView').style.display = 'block';
+  $('scheduleView').style.display = 'none';
+  scheduleTarget = null;
+}
+
 function pull() {
   const pool = remaining();
   if (!pool.length || spinning || state.currentId !== null) return;
   spinning = true;
-  $('result').style.display = 'none';
+  resetResultCard();
   updatePullBtn();
 
   const capsule = $('capsule');
@@ -49,18 +60,51 @@ function finish(pool) {
   updatePullBtn();
 }
 
-// 「完了！」ボタンの処理
+// スライダーの値 → 表示テキスト
+function fmtDays(n) {
+  if (n === 1) return '明日';
+  if (n === 7) return '1週間後';
+  if (n === 14) return '2週間後';
+  return `${n}日後`;
+}
+
+// 「完了！」ボタン → 記録して「次はいつ？」スライダーを表示
 function completeTask() {
   if (!currentTask) return;
   const t = state.tasks.find(x => x.id === currentTask.id);
-  if (t) t.done = true;
-  state.dontotal++;
   currentTask = null;
   state.currentId = null;
+  state.dontotal++;
+  if (t) t.nextDue = addDays(t.freq); // ひとまず今の頻度で次回を予約（スライダーで上書き可）
   save();
   renderStats();
+  renderCatTabs();
   renderTasks();
-  $('result').style.display = 'none';
   $('capsule').textContent = '🔮';
   confetti(30);
+
+  // スライダー表示（今の頻度を初期値に）
+  if (t) {
+    scheduleTarget = t;
+    $('resultView').style.display = 'none';
+    $('scheduleView').style.display = 'block';
+    $('schRange').value = Math.min(14, Math.max(1, t.freq));
+    $('schLabel').textContent = fmtDays(parseInt($('schRange').value, 10));
+  } else {
+    resetResultCard();
+  }
+}
+
+// スライダー確定 → 頻度と次回日を更新
+function confirmSchedule() {
+  if (scheduleTarget) {
+    const n = parseInt($('schRange').value, 10);
+    scheduleTarget.freq = n;      // 次回以降もこの頻度で復活
+    scheduleTarget.nextDue = addDays(n);
+    save();
+    renderCatTabs();
+    renderTasks();
+  }
+  resetResultCard();
+  updatePullBtn();
 }
