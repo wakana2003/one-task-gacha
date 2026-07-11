@@ -55,18 +55,23 @@
     <div class="add-row">
       <select id="taskCat"></select>
       <input type="text" id="taskInput" placeholder="タスクを追加（例：机の上を片付ける）" maxlength="50">
+      <button id="micBtn" title="音声で追加">🎤</button>
       <button id="addBtn">＋</button>
     </div>
+    <div class="voice-hint">🎤で「毎週 風呂掃除」「金曜までに レポートを出す」のように話すと自動登録</div>
     <ul id="taskList"></ul>
     <div class="empty-msg" id="emptyMsg">タスクを追加するとガチャが引けます</div>
   </section>
 </div>
 
-<!-- 読み込み順が大事: 状態 → タスク → ガチャ → 演出 → 初期化 -->
+<div class="toast" id="toast"></div>
+
+<!-- 読み込み順が大事: 状態 → タスク → ガチャ → 演出 → 音声 → 初期化 -->
 <script src="js/storage.js"></script>
 <script src="js/tasks.js"></script>
 <script src="js/gacha.js"></script>
 <script src="js/confetti.js"></script>
+<script src="js/voice.js"></script>
 <script src="js/main.js"></script>
 </body>
 </html>

@@ -71,11 +71,17 @@ function fmtDays(n) {
 // 「完了！」ボタン → 記録して「次はいつ？」スライダーを表示
 function completeTask() {
   if (!currentTask) return;
-  const t = state.tasks.find(x => x.id === currentTask.id);
+  let t = state.tasks.find(x => x.id === currentTask.id);
   currentTask = null;
   state.currentId = null;
   state.dontotal++;
-  if (t) t.nextDue = addDays(t.freq); // ひとまず今の頻度で次回を予約（スライダーで上書き可）
+  if (t && t.freq === 0) {
+    // 一回きり（期限付き）タスクは完了したら消す
+    state.tasks = state.tasks.filter(x => x.id !== t.id);
+    t = null;
+  } else if (t) {
+    t.nextDue = addDays(t.freq); // ひとまず今の頻度で次回を予約（スライダーで上書き可）
+  }
   save();
   renderStats();
   renderCatTabs();
@@ -83,7 +89,7 @@ function completeTask() {
   $('capsule').textContent = '🔮';
   confetti(30);
 
-  // スライダー表示（今の頻度を初期値に）
+  // スライダー表示（今の頻度を初期値に）※一回きりタスクはスキップ
   if (t) {
     scheduleTarget = t;
     $('resultView').style.display = 'none';

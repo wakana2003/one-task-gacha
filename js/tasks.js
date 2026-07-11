@@ -31,9 +31,11 @@ function renderCatTabs() {
 
 // 頻度の表示用テキスト
 function freqText(n) {
+  if (n === 0) return '一回きり';
   if (n === 1) return '毎日';
   if (n === 7) return '週1';
   if (n === 14) return '2週間ごと';
+  if (n === 30) return '毎月';
   return `${n}日ごと`;
 }
 
@@ -58,8 +60,13 @@ function renderTasks() {
 
     const meta = document.createElement('span');
     meta.className = 'meta';
-    meta.textContent = `${catEmoji(t.cat)} ${t.cat}・${freqText(t.freq)}` +
-      (due ? '' : `・あと${daysUntil(t.nextDue)}日で復活`);
+    let metaText = `${catEmoji(t.cat)} ${t.cat}・${freqText(t.freq)}`;
+    if (t.due) {
+      const overdue = t.due < todayISO();
+      metaText += `・〆${t.due.slice(5).replace('-', '/')}${overdue ? ' ⚠期限すぎてる！' : ''}`;
+    }
+    if (!due) metaText += `・あと${daysUntil(t.nextDue)}日で復活`;
+    meta.textContent = metaText;
     name.appendChild(meta);
 
     const del = document.createElement('button');

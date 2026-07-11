@@ -17,6 +17,9 @@ $('toggleBtn').onclick = () => {
 $('pullBtn').onclick = pull;
 $('doneBtn').onclick = completeTask;
 
+// 音声入力
+$('micBtn').onclick = startVoice;
+
 // 「次はいつ？」スライダー
 $('schRange').addEventListener('input', () => {
   $('schLabel').textContent = fmtDays(parseInt($('schRange').value, 10));
