@@ -31,7 +31,7 @@ body{
   -webkit-font-smoothing:antialiased;
 }
 .app{
-  max-width:480px;
+  max-width:700px;
   margin:0 auto;
   min-height:100vh;
   display:flex;
