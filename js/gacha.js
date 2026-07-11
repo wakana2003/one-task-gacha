@@ -6,7 +6,8 @@
 function renderMachine() {
   const wrap = $('machineWrap');
   const colors = CATEGORIES.map(c => c.hex);
-  const positions = [[95,150],[135,140],[175,150],[115,175],[155,178],[95,195],[175,198],[135,205]];
+  // const positions = [[95,150],[135,140],[175,150],[115,175],[155,178],[95,195],[175,198],[135,205]];
+  const positions = [[75,140],[135,110],[195,140],[120,145],[155,140],[95,165],[175,168],[135,175],[99,120]];
   let capsules = '';
   positions.forEach((p, i) => {
     const col = colors[i % colors.length];

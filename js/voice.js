@@ -126,8 +126,8 @@ function startVoice() {
         return;
       }
       // 優先順位: 発話で明示 > タスク名から推測 > フォームの選択値
-      const category = p.category || guessCategory(p.text) || newTaskCat;
-      const minutes = p.minutes || guessMinutes(p.text) || newTaskTime;
+      const category = p.category || guessCategory(p.text) || 'その他';
+      const minutes = p.minutes || guessMinutes(p.text) || 90;
       registerTask({ text: p.text, category, minutes, freq: p.freq, due: p.due });
       input.value = '';
       const parts = [];

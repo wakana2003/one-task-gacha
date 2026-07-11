@@ -54,3 +54,14 @@ $('completeCloseBtn').onclick = () => {
 $('completeCloseBtn2').onclick = () => {
   $('completeModal').classList.remove('show');
 };
+
+// 編集モーダル
+$('editSaveBtn').onclick = saveEdit;
+$('editCancelBtn').onclick = closeEditModal;
+$('editDueClear').onclick = () => {
+  $('editDue').value = '';
+  if (editFreq === 0) { editFreq = 1; renderEditChips(); } // 〆切を外した一回きりは毎日に戻す
+};
+$('editDue').addEventListener('change', () => {
+  if ($('editDue').value) { editFreq = 0; renderEditChips(); } // 〆切を入れたら一回きりに
+});
