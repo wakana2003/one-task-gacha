@@ -13,17 +13,20 @@ $('toggleBtn').onclick = () => {
   $('toggleBtn').textContent = ul.classList.contains('hidden') ? '見る' : '隠す';
 };
 
-// リセット
-$('resetBtn').onclick = resetDoneTasks;
-
 // ガチャ
 $('pullBtn').onclick = pull;
 $('doneBtn').onclick = completeTask;
 
+// 「次はいつ？」スライダー
+$('schRange').addEventListener('input', () => {
+  $('schLabel').textContent = fmtDays(parseInt($('schRange').value, 10));
+});
+$('schOkBtn').onclick = confirmSchedule;
+
 // ---- 初期表示 ----
 // 未完了のまま閉じていたら、引いたタスクを復元してロック継続
 if (state.currentId !== null) {
-  const t = state.tasks.find(x => x.id === state.currentId && !x.done);
+  const t = state.tasks.find(x => x.id === state.currentId);
   if (t) {
     currentTask = t;
     $('capsule').textContent = '✨';
@@ -35,4 +38,6 @@ if (state.currentId !== null) {
 }
 save();
 renderStats();
+renderCatTabs();
+renderCatSelect();
 renderTasks();

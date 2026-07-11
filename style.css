@@ -37,6 +37,26 @@ header p { font-size: .8rem; opacity: .7; margin-top: 4px; }
 .stat .num { font-size: 1.3rem; font-weight: bold; color: var(--gold); }
 .stat .label { font-size: .65rem; opacity: .75; margin-top: 2px; }
 
+/* カテゴリタブ */
+.cat-tabs {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+.cat-tab {
+  background: rgba(255,255,255,.1);
+  color: #fff;
+  font-size: .8rem;
+  padding: 7px 12px;
+}
+.cat-tab.active {
+  background: var(--accent);
+  font-weight: bold;
+  box-shadow: 0 3px 10px rgba(233,69,96,.4);
+}
+
 /* ガチャマシン */
 .machine {
   text-align: center;
@@ -129,6 +149,29 @@ button:active { transform: scale(.95); }
 .done-btn { background: var(--teal); color: #fff; }
 .retry-btn { background: #eee; color: #555; }
 
+/* 「次はいつ？」スライダー */
+#scheduleView { display: none; }
+.sch-title { font-size: 1.05rem; font-weight: bold; margin-bottom: 14px; }
+#schRange {
+  width: 100%;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+.sch-label {
+  font-size: 1.3rem;
+  font-weight: bold;
+  color: var(--accent);
+  margin: 8px 0 14px;
+}
+.sch-ok {
+  width: 100%;
+  padding: 12px;
+  font-size: .95rem;
+  font-weight: bold;
+  background: var(--teal);
+  color: #fff;
+}
+
 /* タスク管理 */
 section.tasks {
   margin-top: 32px;
@@ -150,6 +193,16 @@ section.tasks {
   padding: 5px 12px;
 }
 .add-row { display: flex; gap: 8px; margin-bottom: 12px; }
+.add-row select {
+  border: none;
+  border-radius: 10px;
+  padding: 10px 6px;
+  font-size: .85rem;
+  font-family: inherit;
+  background: #fff;
+  color: #333;
+  max-width: 100px;
+}
 .add-row input {
   flex: 1;
   border: none;
@@ -179,6 +232,12 @@ ul#taskList li {
 }
 ul#taskList li.done { opacity: .45; text-decoration: line-through; }
 ul#taskList li .name { flex: 1; }
+ul#taskList li .meta {
+  display: block;
+  font-size: .7rem;
+  opacity: .6;
+  margin-top: 2px;
+}
 ul#taskList li button {
   background: none;
   color: #fff;

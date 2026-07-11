@@ -16,8 +16,11 @@
   <div class="stats">
     <div class="stat"><div class="num" id="todayCount">0</div><div class="label">今日のガチャ</div></div>
     <div class="stat"><div class="num" id="totalCount">0</div><div class="label">累計ガチャ</div></div>
-    <!-- <div class="stat"><div class="num" id="doneCount">0</div><div class="label">完了タスク</div></div> -->
+    <div class="stat"><div class="num" id="doneCount">0</div><div class="label">完了タスク</div></div>
   </div>
+
+  <!-- カテゴリ切り替えタブ（JSが生成） -->
+  <div class="cat-tabs" id="catTabs"></div>
 
   <div class="machine">
     <div class="capsule" id="capsule">🔮</div>
@@ -27,10 +30,20 @@
   <button class="pull-btn" id="pullBtn">ガチャを引く</button>
 
   <div class="result" id="result">
-    <span class="badge">今やること</span>
-    <div class="task-name" id="resultName"></div>
-    <div class="actions">
-      <button class="done-btn" id="doneBtn">✅ 完了！</button>
+    <!-- 引いた直後の表示 -->
+    <div id="resultView">
+      <span class="badge">今やること</span>
+      <div class="task-name" id="resultName"></div>
+      <div class="actions">
+        <button class="done-btn" id="doneBtn">✅ 完了！</button>
+      </div>
+    </div>
+    <!-- 完了後の「次はいつ？」スライダー -->
+    <div id="scheduleView">
+      <div class="sch-title">🎉 完了！次に出すのはいつ？</div>
+      <input type="range" id="schRange" min="1" max="14" step="1" value="1">
+      <div class="sch-label" id="schLabel">明日</div>
+      <button class="sch-ok" id="schOkBtn">これでOK</button>
     </div>
   </div>
 
@@ -40,12 +53,12 @@
       <button class="toggle-btn" id="toggleBtn">隠す</button>
     </div>
     <div class="add-row">
+      <select id="taskCat"></select>
       <input type="text" id="taskInput" placeholder="タスクを追加（例：机の上を片付ける）" maxlength="50">
       <button id="addBtn">＋</button>
     </div>
     <ul id="taskList"></ul>
     <div class="empty-msg" id="emptyMsg">タスクを追加するとガチャが引けます</div>
-    <div class="reset-row"><button id="resetBtn">完了タスクをリセット（新しい1日を始める）</button></div>
   </section>
 </div>
 
