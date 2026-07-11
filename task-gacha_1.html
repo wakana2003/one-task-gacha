@@ -1,0 +1,1040 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>タスクガチャ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;500;700;800&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#191530;
+  --bg-2:#120f24;
+  --panel:#2b2456;
+  --panel-2:#362d68;
+  --panel-edge:#443a7d;
+  --pink:#ff6fa5;
+  --pink-dim:#5c3350;
+  --mint:#3fe0b8;
+  --mint-dim:#25554a;
+  --blue:#6ec8ff;
+  --blue-dim:#264a63;
+  --yellow:#ffc845;
+  --yellow-dim:#5a4b26;
+  --purple:#b48cff;
+  --purple-dim:#413063;
+  --gray:#9aa0c7;
+  --gray-dim:#33355a;
+  --gold:#ffd84d;
+  --text:#f5f2ff;
+  --text-dim:#b3aad9;
+  --danger:#ff6b6b;
+  --radius-lg:28px;
+  --radius-md:18px;
+  --radius-sm:12px;
+  --font-display:'M PLUS Rounded 1c', sans-serif;
+  --font-body:'Zen Kaku Gothic New', sans-serif;
+  --font-mono:'JetBrains Mono', monospace;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  background:
+    radial-gradient(circle at 20% -10%, #322a5e 0%, transparent 45%),
+    radial-gradient(circle at 90% 10%, #2a2455 0%, transparent 40%),
+    linear-gradient(180deg,var(--bg-2), var(--bg) 30%);
+  color:var(--text);
+  font-family:var(--font-body);
+  min-height:100vh;
+  -webkit-font-smoothing:antialiased;
+}
+.app{
+  max-width:480px;
+  margin:0 auto;
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  position:relative;
+  padding-bottom:92px;
+}
+/* ---------- Header ---------- */
+.app-header{
+  padding:22px 20px 8px;
+  text-align:center;
+}
+.app-title{
+  font-family:var(--font-display);
+  font-weight:800;
+  font-size:26px;
+  letter-spacing:.02em;
+  margin:0;
+  background:linear-gradient(90deg,var(--pink),var(--yellow) 55%,var(--mint));
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+}
+.app-sub{
+  font-size:12px;
+  color:var(--text-dim);
+  margin:4px 0 0;
+  letter-spacing:.04em;
+}
+/* ---------- Tab content wrapper ---------- */
+.tab-panel{
+  padding:8px 18px 20px;
+  display:none;
+  animation:fadeIn .25s ease;
+}
+.tab-panel.active{display:block;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px);} to{opacity:1;transform:translateY(0);}}
+
+/* ---------- Bottom nav ---------- */
+.bottom-nav{
+  position:fixed;
+  bottom:0; left:50%; transform:translateX(-50%);
+  width:100%; max-width:480px;
+  display:flex;
+  background:rgba(24,20,46,.92);
+  backdrop-filter:blur(10px);
+  border-top:1px solid var(--panel-edge);
+  padding:8px 10px calc(8px + env(safe-area-inset-bottom));
+  gap:4px;
+  z-index:50;
+}
+.nav-btn{
+  flex:1;
+  background:none;
+  border:none;
+  color:var(--text-dim);
+  font-family:var(--font-body);
+  font-size:11px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:3px;
+  padding:6px 2px;
+  border-radius:14px;
+  cursor:pointer;
+  transition:.15s;
+}
+.nav-btn .icon{font-size:20px;line-height:1;}
+.nav-btn.active{color:var(--text); background:var(--panel-2);}
+.nav-btn:active{transform:scale(.94);}
+
+/* ---------- Gacha Machine Hero ---------- */
+.machine-wrap{
+  position:relative;
+  display:flex;
+  justify-content:center;
+  padding:14px 0 6px;
+}
+.machine-wrap svg{width:100%; max-width:300px; height:auto; display:block;}
+.capsule{transition:transform .2s;}
+.lever-btn{cursor:pointer;}
+.lever-btn:active .lever-grip{transform:translateY(3px);}
+
+/* ---------- Cards / panels ---------- */
+.card{
+  background:var(--panel);
+  border:1px solid var(--panel-edge);
+  border-radius:var(--radius-md);
+  padding:16px;
+}
+.section-label{
+  font-size:12px;
+  font-weight:700;
+  color:var(--text-dim);
+  letter-spacing:.06em;
+  margin:18px 2px 8px;
+  display:flex;
+  align-items:center;
+  gap:6px;
+}
+.section-label .bar{width:4px;height:12px;border-radius:2px;background:var(--pink);display:inline-block;}
+
+/* ---------- Chips ---------- */
+.chip-row{
+  display:flex;
+  gap:8px;
+  overflow-x:auto;
+  padding:2px 2px 6px;
+  scrollbar-width:none;
+}
+.chip-row::-webkit-scrollbar{display:none;}
+.chip{
+  flex:none;
+  font-family:var(--font-body);
+  font-size:13px;
+  font-weight:500;
+  padding:9px 15px;
+  border-radius:999px;
+  border:1px solid var(--panel-edge);
+  background:var(--panel);
+  color:var(--text-dim);
+  cursor:pointer;
+  white-space:nowrap;
+  transition:.15s;
+  display:flex;
+  align-items:center;
+  gap:5px;
+}
+.chip:active{transform:scale(.96);}
+.chip.selected{
+  color:var(--bg-2);
+  border-color:transparent;
+  font-weight:700;
+}
+.chip[data-cat="仕事"].selected{background:var(--pink);}
+.chip[data-cat="家事"].selected{background:var(--mint);}
+.chip[data-cat="勉強"].selected{background:var(--blue);}
+.chip[data-cat="健康"].selected{background:var(--yellow);}
+.chip[data-cat="趣味"].selected{background:var(--purple);}
+.chip[data-cat="その他"].selected{background:var(--gray);}
+.chip[data-cat="all"].selected{background:linear-gradient(90deg,var(--pink),var(--mint));}
+.chip.time.selected{background:var(--gold); color:#3a2c00;}
+
+/* ---------- Big pull button ---------- */
+.pull-btn{
+  width:100%;
+  margin-top:16px;
+  border:none;
+  border-radius:20px;
+  padding:18px;
+  font-family:var(--font-display);
+  font-weight:800;
+  font-size:18px;
+  letter-spacing:.03em;
+  color:#2a1400;
+  background:linear-gradient(180deg,#ffe08a,var(--gold));
+  box-shadow:0 6px 0 #b8892a, 0 10px 18px rgba(0,0,0,.35);
+  cursor:pointer;
+  transition:.1s;
+}
+.pull-btn:active{transform:translateY(4px); box-shadow:0 2px 0 #b8892a, 0 4px 10px rgba(0,0,0,.3);}
+.pull-btn:disabled{opacity:.4; box-shadow:none; cursor:not-allowed;}
+.pull-hint{
+  text-align:center;
+  font-size:11px;
+  color:var(--text-dim);
+  margin-top:8px;
+}
+
+/* ---------- Empty state ---------- */
+.empty-state{
+  text-align:center;
+  padding:26px 14px;
+  color:var(--text-dim);
+  font-size:13px;
+  line-height:1.7;
+}
+.empty-state .big{font-size:34px; display:block; margin-bottom:6px;}
+.link-btn{
+  background:none;border:none;color:var(--blue);text-decoration:underline;
+  font-family:var(--font-body);font-size:13px;cursor:pointer;padding:0;
+}
+
+/* ---------- Modal ---------- */
+.modal-overlay{
+  position:fixed; inset:0;
+  background:rgba(10,8,22,.72);
+  backdrop-filter:blur(3px);
+  display:none;
+  align-items:flex-end;
+  justify-content:center;
+  z-index:100;
+}
+.modal-overlay.show{display:flex;}
+.modal-sheet{
+  width:100%; max-width:480px;
+  background:var(--panel);
+  border:1px solid var(--panel-edge);
+  border-top-left-radius:26px; border-top-right-radius:26px;
+  padding:22px 22px calc(22px + env(safe-area-inset-bottom));
+  animation:slideUp .28s cubic-bezier(.2,.9,.3,1.2);
+  max-height:88vh;
+  overflow-y:auto;
+}
+@keyframes slideUp{from{transform:translateY(60px); opacity:0;} to{transform:translateY(0); opacity:1;}}
+.modal-drag{
+  width:40px;height:4px;background:var(--panel-edge);border-radius:2px;margin:0 auto 16px;
+}
+.close-x{
+  position:absolute; top:14px; right:18px;
+  background:none;border:none;color:var(--text-dim);font-size:20px;cursor:pointer;
+}
+
+/* ---------- Capsule reveal ---------- */
+.reveal-stage{
+  display:flex; justify-content:center; align-items:center;
+  padding:10px 0 6px;
+  min-height:120px;
+}
+.capsule-big{
+  width:96px;height:96px;
+  border-radius:50%;
+  position:relative;
+  animation:dropIn .5s cubic-bezier(.3,1.4,.5,1);
+}
+@keyframes dropIn{
+  0%{transform:translateY(-140px) scale(.6); opacity:0;}
+  60%{transform:translateY(8px) scale(1.05); opacity:1;}
+  100%{transform:translateY(0) scale(1);}
+}
+.capsule-big.pop{animation:dropIn .5s cubic-bezier(.3,1.4,.5,1), popOpen .35s ease .55s forwards;}
+@keyframes popOpen{
+  0%{transform:scale(1);}
+  40%{transform:scale(1.25) rotate(-4deg);}
+  100%{transform:scale(0); opacity:0;}
+}
+.result-card{
+  opacity:0;
+  animation:fadeInUp .4s ease .75s forwards;
+}
+@keyframes fadeInUp{from{opacity:0; transform:translateY(10px);} to{opacity:1; transform:translateY(0);}}
+
+.task-badge{
+  display:inline-flex; align-items:center; gap:5px;
+  font-size:11px; font-weight:700; padding:4px 10px; border-radius:999px;
+  margin-bottom:10px;
+}
+.result-title{
+  font-family:var(--font-display);
+  font-size:20px; font-weight:700; line-height:1.4; margin:0 0 6px;
+}
+.result-meta{
+  font-size:12px; color:var(--text-dim); margin-bottom:18px;
+  display:flex; gap:12px;
+}
+.jackpot-banner{
+  background:linear-gradient(90deg,var(--gold),#fff2b8);
+  color:#3a2c00;
+  font-family:var(--font-display);
+  font-weight:800;
+  font-size:13px;
+  text-align:center;
+  padding:8px;
+  border-radius:12px;
+  margin-bottom:14px;
+  animation:pulseGlow 1.1s infinite;
+}
+@keyframes pulseGlow{0%,100%{box-shadow:0 0 0 rgba(255,216,77,.5);} 50%{box-shadow:0 0 18px rgba(255,216,77,.6);}}
+
+.modal-actions{display:flex; flex-direction:column; gap:10px; margin-top:6px;}
+.btn{
+  font-family:var(--font-body);
+  font-weight:700;
+  font-size:14px;
+  padding:14px;
+  border-radius:14px;
+  border:none;
+  cursor:pointer;
+  transition:.12s;
+}
+.btn:active{transform:scale(.97);}
+.btn-primary{background:var(--mint); color:#0e2b23;}
+.btn-secondary{background:var(--panel-2); color:var(--text); border:1px solid var(--panel-edge);}
+.btn-ghost{background:none; color:var(--text-dim); text-decoration:underline;}
+.btn-danger{background:var(--danger); color:#310a0a;}
+
+/* ---------- Timer bar ---------- */
+.timer-bar{
+  display:none;
+  background:var(--panel-2);
+  border:1px solid var(--panel-edge);
+  border-radius:18px;
+  padding:14px 16px;
+  margin-bottom:14px;
+  align-items:center;
+  gap:12px;
+}
+.timer-bar.show{display:flex;}
+.timer-dot{width:10px;height:10px;border-radius:50%;background:var(--mint); animation:blink 1.4s infinite;}
+@keyframes blink{0%,100%{opacity:1;} 50%{opacity:.3;}}
+.timer-info{flex:1;}
+.timer-task{font-size:13px; font-weight:700;}
+.timer-clock{font-family:var(--font-mono); font-size:12px; color:var(--text-dim);}
+.timer-done-btn{
+  background:var(--mint); color:#0e2b23; border:none; border-radius:10px;
+  padding:9px 14px; font-weight:700; font-size:12px; cursor:pointer;
+}
+
+/* ---------- Task list ---------- */
+.task-form{display:flex; flex-direction:column; gap:10px; margin-bottom:6px;}
+.task-form input[type=text]{
+  background:var(--bg-2);
+  border:1px solid var(--panel-edge);
+  border-radius:12px;
+  padding:12px 14px;
+  color:var(--text);
+  font-family:var(--font-body);
+  font-size:14px;
+}
+.task-form input::placeholder{color:#6b6496;}
+.form-row{display:flex; gap:8px;}
+.form-row .chip-row{flex:1;}
+.add-btn{
+  background:var(--pink); color:#3a0d20; border:none; border-radius:12px;
+  padding:12px; font-weight:700; font-size:14px; cursor:pointer;
+}
+.task-item{
+  display:flex; align-items:center; gap:10px;
+  background:var(--panel);
+  border:1px solid var(--panel-edge);
+  border-radius:14px;
+  padding:12px 14px;
+  margin-bottom:8px;
+}
+.task-dot{width:9px;height:9px;border-radius:50%; flex:none;}
+.task-body{flex:1; min-width:0;}
+.task-text{font-size:13.5px; font-weight:500;}
+.task-tags{font-size:11px; color:var(--text-dim); margin-top:2px;}
+.task-del{
+  background:none; border:none; color:var(--text-dim); font-size:16px; cursor:pointer; padding:4px 6px;
+}
+
+/* ---------- Collection grid ---------- */
+.stats-row{display:flex; gap:10px; margin-bottom:16px;}
+.stat-box{
+  flex:1; background:var(--panel); border:1px solid var(--panel-edge); border-radius:14px;
+  padding:12px 10px; text-align:center;
+}
+.stat-num{font-family:var(--font-mono); font-size:20px; font-weight:700; color:var(--gold);}
+.stat-label{font-size:10px; color:var(--text-dim); margin-top:2px;}
+.dex-group{margin-bottom:20px;}
+.dex-cat-title{
+  display:flex; align-items:center; gap:8px; font-size:13px; font-weight:700; margin-bottom:8px;
+}
+.dex-cat-dot{width:10px;height:10px;border-radius:50%;}
+.dex-grid{
+  display:grid; grid-template-columns:repeat(6,1fr); gap:6px;
+}
+.dex-slot{
+  aspect-ratio:1; border-radius:10px;
+  display:flex; align-items:center; justify-content:center;
+  font-size:18px;
+  border:1px dashed var(--panel-edge);
+  background:var(--bg-2);
+}
+.dex-slot.filled{
+  border:1px solid transparent;
+  background:var(--panel-2);
+}
+.rare-row{display:flex; gap:6px; flex-wrap:wrap; margin-top:6px;}
+.rare-slot{
+  width:44px;height:44px;border-radius:10px;
+  display:flex; align-items:center; justify-content:center; font-size:20px;
+  background:var(--bg-2); border:1px dashed var(--gold);
+}
+.rare-slot.filled{background:linear-gradient(160deg,#ffe08a,var(--gold)); border-color:transparent;}
+
+/* toast */
+.toast{
+  position:fixed; top:16px; left:50%; transform:translateX(-50%) translateY(-20px);
+  background:var(--panel-2); border:1px solid var(--panel-edge); color:var(--text);
+  padding:10px 18px; border-radius:999px; font-size:12.5px; z-index:200;
+  opacity:0; transition:.25s; pointer-events:none;
+}
+.toast.show{opacity:1; transform:translateX(-50%) translateY(0);}
+</style>
+</head>
+<body>
+<div class="app" id="app">
+
+  <div class="app-header">
+    <p class="app-title">🎰 タスクガチャ</p>
+    <p class="app-sub">今できる分だけ、ランダムに一個だけ選ぶ</p>
+  </div>
+
+  <!-- ===== GACHA TAB ===== -->
+  <div class="tab-panel active" id="tab-gacha">
+
+    <div id="timerBar" class="timer-bar">
+      <div class="timer-dot"></div>
+      <div class="timer-info">
+        <div class="timer-task" id="timerTaskText">-</div>
+        <div class="timer-clock" id="timerClock">00:00</div>
+      </div>
+      <button class="timer-done-btn" id="timerDoneBtn">完了にする</button>
+    </div>
+
+    <div class="machine-wrap" id="machineWrap"></div>
+
+    <div class="section-label"><span class="bar" style="background:var(--pink)"></span>ジャンルを選ぶ</div>
+    <div class="chip-row" id="catChips"></div>
+
+    <div class="section-label"><span class="bar" style="background:var(--yellow)"></span>今、使える時間は？</div>
+    <div class="chip-row" id="timeChips"></div>
+
+    <button class="pull-btn" id="pullBtn">🎲 レバーを引く</button>
+    <p class="pull-hint" id="pullHint">条件に合うタスクからランダムで1つ選びます</p>
+
+  </div>
+
+  <!-- ===== TASKS TAB ===== -->
+  <div class="tab-panel" id="tab-tasks">
+    <div class="section-label" style="margin-top:6px"><span class="bar" style="background:var(--mint)"></span>新しいタスクを追加</div>
+    <div class="card">
+      <div class="task-form">
+        <input type="text" id="newTaskText" placeholder="例）洗濯物をたたむ">
+        <div class="section-label" style="margin:2px 2px 2px;font-size:11px;">ジャンル</div>
+        <div class="chip-row" id="newTaskCatChips"></div>
+        <div class="section-label" style="margin:2px 2px 2px;font-size:11px;">かかる時間の目安</div>
+        <div class="chip-row" id="newTaskTimeChips"></div>
+        <button class="add-btn" id="addTaskBtn">＋ 追加する</button>
+      </div>
+    </div>
+
+    <div class="section-label"><span class="bar" style="background:var(--blue)"></span>登録済みタスク一覧</div>
+    <div id="taskList"></div>
+  </div>
+
+  <!-- ===== COLLECTION TAB ===== -->
+  <div class="tab-panel" id="tab-collection">
+    <div class="stats-row">
+      <div class="stat-box"><div class="stat-num" id="statToday">0</div><div class="stat-label">今日の達成</div></div>
+      <div class="stat-box"><div class="stat-num" id="statTotal">0</div><div class="stat-label">累計カプセル</div></div>
+      <div class="stat-box"><div class="stat-num" id="statStreak">0</div><div class="stat-label">連続日数</div></div>
+    </div>
+    <div class="section-label"><span class="bar" style="background:var(--gold)"></span>レアカプセル（大当たり産）</div>
+    <div class="card"><div class="rare-row" id="rareRow"></div></div>
+    <div id="dexContainer"></div>
+  </div>
+
+  <div class="bottom-nav">
+    <button class="nav-btn active" data-tab="gacha"><span class="icon">🎰</span>ガチャ</button>
+    <button class="nav-btn" data-tab="tasks"><span class="icon">📝</span>タスク</button>
+    <button class="nav-btn" data-tab="collection"><span class="icon">🗂️</span>図鑑</button>
+  </div>
+</div>
+
+<!-- ===== RESULT MODAL ===== -->
+<div class="modal-overlay" id="resultModal">
+  <div class="modal-sheet">
+    <div class="modal-drag"></div>
+    <div class="reveal-stage">
+      <div class="capsule-big" id="revealCapsule"></div>
+    </div>
+    <div class="result-card" id="resultCard">
+      <div id="jackpotBanner" style="display:none" class="jackpot-banner">✨ 大当たり！ラッキータスク ✨</div>
+      <span class="task-badge" id="resultBadge"></span>
+      <p class="result-title" id="resultTitle">-</p>
+      <div class="result-meta">
+        <span id="resultTime">-</span>
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-primary" id="startTaskBtn">これをやる</button>
+        <button class="btn btn-secondary" id="rerollBtn">🔄 もう一回引く</button>
+        <button class="btn btn-ghost" id="skipBtn">今回はスキップする</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== COMPLETE MODAL ===== -->
+<div class="modal-overlay" id="completeModal">
+  <div class="modal-sheet" style="text-align:center;">
+    <div class="modal-drag"></div>
+    <p style="font-size:48px;margin:10px 0 6px;" id="completeEmoji">🎉</p>
+    <p style="font-family:var(--font-display);font-weight:800;font-size:18px;margin:0 0 4px;">カプセル獲得！</p>
+    <p style="font-size:13px;color:var(--text-dim);margin:0 0 18px;" id="completeSub">よく頑張りました</p>
+    <button class="btn btn-primary" id="completeCloseBtn">図鑑を見にいく</button>
+    <button class="btn btn-ghost" id="completeCloseBtn2" style="margin-top:8px;">閉じる</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+(() => {
+"use strict";
+
+/* ============ CONSTANTS ============ */
+const CATEGORIES = [
+  { id:"仕事", hex:"#ff6fa5", emoji:"💼" },
+  { id:"家事", hex:"#3fe0b8", emoji:"🧹" },
+  { id:"勉強", hex:"#6ec8ff", emoji:"📚" },
+  { id:"健康", hex:"#ffc845", emoji:"💪" },
+  { id:"趣味", hex:"#b48cff", emoji:"🎨" },
+  { id:"その他", hex:"#9aa0c7", emoji:"🗂️" },
+];
+const TIME_OPTIONS = [
+  { id:5,  label:"5分" },
+  { id:15, label:"15分" },
+  { id:30, label:"30分" },
+  { id:60, label:"1時間" },
+  { id:9999, label:"こだわらない" },
+];
+const CHAR_POOL = ["🐣","🐰","🦊","🐻","🐼","🐨","🐸","🐧","🦉","🐢","🐙","🐳"];
+const RARE_POOL = ["🌟","🍀","⭐","🎆"];
+const LUCKY_TASKS = [
+  { text:"1分だけ深呼吸する", minutes:1 },
+  { text:"好きな音楽を1曲だけ聴く", minutes:3 },
+  { text:"窓の外を1分眺めてぼーっとする", minutes:1 },
+  { text:"温かい飲み物を淹れて一息つく", minutes:5 },
+  { text:"好きな動画を1本だけ見る", minutes:5 },
+  { text:"軽くストレッチする", minutes:2 },
+  { text:"5分だけ目を閉じて休む", minutes:5 },
+  { text:"お気に入りの写真を見返す", minutes:2 },
+];
+const JACKPOT_CHANCE = 0.12;
+const LS_TASKS = "tasks", LS_DEX = "dex", LS_RARE = "rareDex", LS_STATS = "stats";
+
+function catInfo(id){ return CATEGORIES.find(c=>c.id===id) || CATEGORIES[CATEGORIES.length-1]; }
+function todayStr(){ const d=new Date(); return d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate(); }
+function uid(){ return Date.now().toString(36)+Math.random().toString(36).slice(2,7); }
+
+/* ============ STATE ============ */
+let tasks = [];
+let dex = {};      // "category|char" -> count
+let rareDex = {};  // "char" -> count
+let stats = { total:0, todayCount:0, todayDate:todayStr(), streak:0, lastDate:null };
+
+let selectedCat = "all";
+let selectedTime = 15;
+let newTaskCat = "仕事";
+let newTaskTime = 15;
+
+let currentPick = null;   // {text, minutes, category, isJackpot}
+let timerInterval = null;
+let timerRemaining = 0;
+
+/* ============ STORAGE ============ */
+async function loadState(){
+  try{
+    const t = await window.storage.get(LS_TASKS);
+    tasks = t ? JSON.parse(t.value) : defaultTasks();
+  }catch(e){ tasks = defaultTasks(); }
+  try{
+    const d = await window.storage.get(LS_DEX);
+    dex = d ? JSON.parse(d.value) : {};
+  }catch(e){ dex = {}; }
+  try{
+    const r = await window.storage.get(LS_RARE);
+    rareDex = r ? JSON.parse(r.value) : {};
+  }catch(e){ rareDex = {}; }
+  try{
+    const s = await window.storage.get(LS_STATS);
+    stats = s ? JSON.parse(s.value) : stats;
+  }catch(e){ /* keep default */ }
+
+  // daily reset check
+  if(stats.todayDate !== todayStr()){
+    stats.todayCount = 0;
+    stats.todayDate = todayStr();
+    persistStats();
+  }
+}
+function defaultTasks(){
+  return [
+    { id:uid(), text:"メール受信箱を整理する", category:"仕事", minutes:15 },
+    { id:uid(), text:"シンクの食器を洗う", category:"家事", minutes:10 },
+    { id:uid(), text:"参考書を1ページ読む", category:"勉強", minutes:5 },
+    { id:uid(), text:"軽く散歩する", category:"健康", minutes:20 },
+  ];
+}
+async function persistTasks(){ try{ await window.storage.set(LS_TASKS, JSON.stringify(tasks)); }catch(e){} }
+async function persistDex(){ try{ await window.storage.set(LS_DEX, JSON.stringify(dex)); }catch(e){} }
+async function persistRare(){ try{ await window.storage.set(LS_RARE, JSON.stringify(rareDex)); }catch(e){} }
+async function persistStats(){ try{ await window.storage.set(LS_STATS, JSON.stringify(stats)); }catch(e){} }
+
+/* ============ TOAST ============ */
+let toastTimer=null;
+function toast(msg){
+  const el = document.getElementById("toast");
+  el.textContent = msg;
+  el.classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=> el.classList.remove("show"), 1800);
+}
+
+/* ============ MACHINE SVG ============ */
+function renderMachine(){
+  const wrap = document.getElementById("machineWrap");
+  const capsuleColors = CATEGORIES.map(c=>c.hex);
+  let capsules = "";
+  const positions = [
+    [95,150],[135,140],[175,150],[115,175],[155,178],[95,195],[175,198],[135,205]
+  ];
+  positions.forEach((p,i)=>{
+    const col = capsuleColors[i % capsuleColors.length];
+    capsules += `
+      <g class="capsule">
+        <circle cx="${p[0]}" cy="${p[1]}" r="15" fill="${col}" opacity="0.92"/>
+        <path d="M ${p[0]-15} ${p[1]} A 15 15 0 0 1 ${p[0]+15} ${p[1]}" fill="#ffffff" opacity="0.35"/>
+      </g>`;
+  });
+  wrap.innerHTML = `
+  <svg viewBox="0 0 270 330" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="domeGrad" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#4a3f86"/>
+        <stop offset="100%" stop-color="#241f45"/>
+      </linearGradient>
+      <linearGradient id="bodyGrad" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#ff6fa5"/>
+        <stop offset="100%" stop-color="#c94a7d"/>
+      </linearGradient>
+    </defs>
+    <!-- dome -->
+    <path d="M 40 210 A 95 105 0 0 1 230 210 L 230 215 L 40 215 Z" fill="url(#domeGrad)" stroke="#5c4fa0" stroke-width="3"/>
+    <ellipse cx="135" cy="112" rx="95" ry="103" fill="url(#domeGrad)" stroke="#5c4fa0" stroke-width="3"/>
+    <ellipse cx="105" cy="70" rx="26" ry="14" fill="#ffffff" opacity="0.10"/>
+    ${capsules}
+    <!-- neck -->
+    <rect x="112" y="210" width="46" height="14" fill="#5c4fa0"/>
+    <!-- body -->
+    <rect x="30" y="224" width="210" height="90" rx="18" fill="url(#bodyGrad)" stroke="#8a2f57" stroke-width="3"/>
+    <!-- coin slot panel -->
+    <rect x="50" y="240" width="80" height="46" rx="10" fill="#3a1330" opacity="0.55"/>
+    <circle cx="70" cy="263" r="7" fill="#ffd84d"/>
+    <rect x="86" y="253" width="30" height="20" rx="3" fill="#241021"/>
+    <!-- dispenser flap -->
+    <rect x="150" y="258" width="66" height="34" rx="8" fill="#241021" opacity="0.5"/>
+    <rect x="158" y="264" width="50" height="14" rx="4" fill="#1a0c17"/>
+    <!-- legs -->
+    <rect x="42" y="314" width="18" height="12" rx="3" fill="#8a2f57"/>
+    <rect x="210" y="314" width="18" height="12" rx="3" fill="#8a2f57"/>
+  </svg>`;
+}
+
+/* ============ CHIPS ============ */
+function buildChip(label, value, groupSelector, isSelected, extraClass, catId){
+  const chip = document.createElement("button");
+  chip.className = "chip" + (extraClass?(" "+extraClass):"") + (isSelected?" selected":"");
+  if(catId) chip.dataset.cat = catId;
+  chip.textContent = label;
+  return chip;
+}
+
+function renderCatChips(){
+  const el = document.getElementById("catChips");
+  el.innerHTML = "";
+  const allChip = document.createElement("button");
+  allChip.className = "chip" + (selectedCat==="all" ? " selected":"");
+  allChip.dataset.cat = "all";
+  allChip.textContent = "🎯 すべて";
+  allChip.onclick = ()=>{ selectedCat="all"; renderCatChips(); };
+  el.appendChild(allChip);
+  CATEGORIES.forEach(c=>{
+    const chip = document.createElement("button");
+    chip.className = "chip" + (selectedCat===c.id ? " selected":"");
+    chip.dataset.cat = c.id;
+    chip.textContent = `${c.emoji} ${c.id}`;
+    chip.onclick = ()=>{ selectedCat=c.id; renderCatChips(); };
+    el.appendChild(chip);
+  });
+}
+function renderTimeChips(){
+  const el = document.getElementById("timeChips");
+  el.innerHTML = "";
+  TIME_OPTIONS.forEach(t=>{
+    const chip = document.createElement("button");
+    chip.className = "chip time" + (selectedTime===t.id ? " selected":"");
+    chip.textContent = "⏱ " + t.label;
+    chip.onclick = ()=>{ selectedTime=t.id; renderTimeChips(); };
+    el.appendChild(chip);
+  });
+}
+function renderNewTaskCatChips(){
+  const el = document.getElementById("newTaskCatChips");
+  el.innerHTML = "";
+  CATEGORIES.forEach(c=>{
+    const chip = document.createElement("button");
+    chip.className = "chip" + (newTaskCat===c.id ? " selected":"");
+    chip.dataset.cat = c.id;
+    chip.textContent = `${c.emoji} ${c.id}`;
+    chip.onclick = ()=>{ newTaskCat=c.id; renderNewTaskCatChips(); };
+    el.appendChild(chip);
+  });
+}
+function renderNewTaskTimeChips(){
+  const el = document.getElementById("newTaskTimeChips");
+  el.innerHTML = "";
+  [5,10,15,30,45,60,90].forEach(m=>{
+    const chip = document.createElement("button");
+    chip.className = "chip time" + (newTaskTime===m ? " selected":"");
+    chip.textContent = m+"分";
+    chip.onclick = ()=>{ newTaskTime=m; renderNewTaskTimeChips(); };
+    el.appendChild(chip);
+  });
+}
+
+/* ============ TASK LIST ============ */
+function renderTaskList(){
+  const el = document.getElementById("taskList");
+  if(tasks.length===0){
+    el.innerHTML = `<div class="empty-state"><span class="big">📭</span>まだタスクがありません。<br>上のフォームから追加してみましょう。</div>`;
+    return;
+  }
+  el.innerHTML = "";
+  tasks.slice().sort((a,b)=> a.category.localeCompare(b.category)).forEach(t=>{
+    const info = catInfo(t.category);
+    const row = document.createElement("div");
+    row.className = "task-item";
+    row.innerHTML = `
+      <div class="task-dot" style="background:${info.hex}"></div>
+      <div class="task-body">
+        <div class="task-text">${escapeHtml(t.text)}</div>
+        <div class="task-tags">${info.emoji} ${t.category} ・ 約${t.minutes}分</div>
+      </div>
+      <button class="task-del" data-id="${t.id}">✕</button>
+    `;
+    row.querySelector(".task-del").onclick = ()=> deleteTask(t.id);
+    el.appendChild(row);
+  });
+}
+function escapeHtml(s){
+  return s.replace(/[&<>"']/g, m => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]));
+}
+async function deleteTask(id){
+  tasks = tasks.filter(t=>t.id!==id);
+  await persistTasks();
+  renderTaskList();
+  toast("タスクを削除しました");
+}
+async function addTask(){
+  const input = document.getElementById("newTaskText");
+  const text = input.value.trim();
+  if(!text){ toast("タスクの内容を入力してください"); return; }
+  tasks.push({ id:uid(), text, category:newTaskCat, minutes:newTaskTime });
+  await persistTasks();
+  input.value = "";
+  renderTaskList();
+  toast("タスクを追加しました 🎉");
+}
+
+/* ============ GACHA LOGIC ============ */
+function poolForFilters(){
+  return tasks.filter(t=>{
+    const catOk = selectedCat==="all" || t.category===selectedCat;
+    const timeOk = selectedTime===9999 || t.minutes <= selectedTime;
+    return catOk && timeOk;
+  });
+}
+
+function pullGacha(){
+  const pool = poolForFilters();
+  const rollJackpot = Math.random() < JACKPOT_CHANCE;
+
+  if(rollJackpot){
+    const lucky = LUCKY_TASKS[Math.floor(Math.random()*LUCKY_TASKS.length)];
+    currentPick = { text: lucky.text, minutes: lucky.minutes, category: "ラッキー", isJackpot:true };
+    showResultModal();
+    return;
+  }
+  if(pool.length===0){
+    toast(tasks.length===0 ? "まずはタスクを登録してください" : "その条件に合うタスクがありません。条件を変えてみましょう");
+    return;
+  }
+  const picked = pool[Math.floor(Math.random()*pool.length)];
+  currentPick = { text: picked.text, minutes: picked.minutes, category: picked.category, isJackpot:false };
+  showResultModal();
+}
+
+function showResultModal(){
+  const modal = document.getElementById("resultModal");
+  const capsuleEl = document.getElementById("revealCapsule");
+  const badge = document.getElementById("resultBadge");
+  const title = document.getElementById("resultTitle");
+  const meta = document.getElementById("resultTime");
+  const jackpotBanner = document.getElementById("jackpotBanner");
+
+  const info = currentPick.isJackpot
+    ? { hex:"#ffd84d", emoji:"🍀" }
+    : catInfo(currentPick.category);
+
+  capsuleEl.style.background = `radial-gradient(circle at 35% 30%, #ffffff55, ${info.hex})`;
+  capsuleEl.classList.remove("pop");
+  void capsuleEl.offsetWidth; // restart animation
+  capsuleEl.classList.add("pop");
+
+  jackpotBanner.style.display = currentPick.isJackpot ? "block" : "none";
+  badge.style.background = info.hex;
+  badge.style.color = "#241021";
+  badge.textContent = `${info.emoji} ${currentPick.category}`;
+  title.textContent = currentPick.text;
+  meta.textContent = `目安 ${currentPick.minutes}分`;
+
+  document.getElementById("resultCard").style.animation = "none";
+  void document.getElementById("resultCard").offsetWidth;
+  document.getElementById("resultCard").style.animation = "";
+
+  modal.classList.add("show");
+}
+function closeResultModal(){
+  document.getElementById("resultModal").classList.remove("show");
+}
+
+/* ============ TIMER ============ */
+function startTimer(){
+  closeResultModal();
+  timerRemaining = currentPick.minutes * 60;
+  document.getElementById("timerTaskText").textContent = `${currentPick.text}`;
+  document.getElementById("timerBar").classList.add("show");
+  updateTimerClock();
+  clearInterval(timerInterval);
+  timerInterval = setInterval(()=>{
+    timerRemaining -= 1;
+    if(timerRemaining < 0) timerRemaining = 0;
+    updateTimerClock();
+  }, 1000);
+}
+function updateTimerClock(){
+  const m = Math.floor(Math.abs(timerRemaining)/60);
+  const s = Math.abs(timerRemaining)%60;
+  const sign = timerRemaining < 0 ? "-" : "";
+  document.getElementById("timerClock").textContent =
+    `${sign}${String(m).padStart(2,"0")}:${String(s).padStart(2,"0")}`;
+}
+async function completeCurrentTask(){
+  clearInterval(timerInterval);
+  document.getElementById("timerBar").classList.remove("show");
+
+  let emoji, key, isRare = currentPick.isJackpot;
+  if(isRare){
+    emoji = RARE_POOL[Math.floor(Math.random()*RARE_POOL.length)];
+    key = emoji;
+    rareDex[key] = (rareDex[key]||0) + 1;
+    await persistRare();
+  }else{
+    emoji = CHAR_POOL[Math.floor(Math.random()*CHAR_POOL.length)];
+    key = currentPick.category + "|" + emoji;
+    dex[key] = (dex[key]||0) + 1;
+    await persistDex();
+  }
+
+  // stats
+  if(stats.todayDate !== todayStr()){ stats.todayCount = 0; stats.todayDate = todayStr(); }
+  const y = new Date(); y.setDate(y.getDate()-1);
+  const yesterday = y.getFullYear()+"-"+(y.getMonth()+1)+"-"+y.getDate();
+  if(stats.lastDate === todayStr()){
+    // already completed today, streak unaffected
+  } else if(stats.lastDate === yesterday){
+    stats.streak += 1;
+  } else {
+    stats.streak = 1;
+  }
+  stats.lastDate = todayStr();
+  stats.total += 1;
+  stats.todayCount += 1;
+  await persistStats();
+
+  document.getElementById("completeEmoji").textContent = emoji;
+  document.getElementById("completeSub").textContent = isRare
+    ? "レアカプセルだ…！おつかれさま"
+    : `「${currentPick.text}」やりきった！`;
+  document.getElementById("completeModal").classList.add("show");
+
+  currentPick = null;
+  renderStats();
+  renderDex();
+}
+
+/* ============ COLLECTION / DEX ============ */
+function renderStats(){
+  document.getElementById("statToday").textContent = stats.todayCount;
+  document.getElementById("statTotal").textContent = stats.total;
+  document.getElementById("statStreak").textContent = stats.streak;
+}
+function renderDex(){
+  const rareRow = document.getElementById("rareRow");
+  rareRow.innerHTML = "";
+  RARE_POOL.forEach(ch=>{
+    const filled = !!rareDex[ch];
+    const slot = document.createElement("div");
+    slot.className = "rare-slot" + (filled ? " filled":"");
+    slot.textContent = filled ? ch : "?";
+    slot.title = filled ? `${ch} × ${rareDex[ch]}` : "未獲得";
+    rareRow.appendChild(slot);
+  });
+
+  const container = document.getElementById("dexContainer");
+  container.innerHTML = "";
+  CATEGORIES.forEach(cat=>{
+    const group = document.createElement("div");
+    group.className = "dex-group";
+    const collectedCount = CHAR_POOL.filter(ch => dex[cat.id+"|"+ch]).length;
+    group.innerHTML = `
+      <div class="dex-cat-title">
+        <span class="dex-cat-dot" style="background:${cat.hex}"></span>
+        ${cat.emoji} ${cat.id} <span style="color:var(--text-dim);font-weight:400;">（${collectedCount}/${CHAR_POOL.length}）</span>
+      </div>
+      <div class="dex-grid"></div>
+    `;
+    const grid = group.querySelector(".dex-grid");
+    CHAR_POOL.forEach(ch=>{
+      const key = cat.id+"|"+ch;
+      const filled = !!dex[key];
+      const slot = document.createElement("div");
+      slot.className = "dex-slot" + (filled ? " filled":"");
+      if(filled) slot.style.border = `1px solid ${cat.hex}55`;
+      slot.textContent = filled ? ch : "";
+      slot.title = filled ? `${ch} × ${dex[key]}` : "未獲得";
+      grid.appendChild(slot);
+    });
+    container.appendChild(group);
+  });
+}
+
+/* ============ TAB SWITCHING ============ */
+function switchTab(name){
+  document.querySelectorAll(".tab-panel").forEach(p=>p.classList.remove("active"));
+  document.querySelectorAll(".nav-btn").forEach(b=>b.classList.remove("active"));
+  document.getElementById("tab-"+name).classList.add("active");
+  document.querySelector(`.nav-btn[data-tab="${name}"]`).classList.add("active");
+}
+
+/* ============ INIT ============ */
+async function init(){
+  await loadState();
+
+  renderMachine();
+  renderCatChips();
+  renderTimeChips();
+  renderNewTaskCatChips();
+  renderNewTaskTimeChips();
+  renderTaskList();
+  renderStats();
+  renderDex();
+
+  document.querySelectorAll(".nav-btn").forEach(b=>{
+    b.onclick = ()=> switchTab(b.dataset.tab);
+  });
+
+  document.getElementById("pullBtn").onclick = ()=>{
+    const machine = document.getElementById("machineWrap");
+    machine.style.transition = "transform .08s";
+    machine.style.transform = "translateX(-4px) rotate(-1deg)";
+    setTimeout(()=>{ machine.style.transform = "translateX(4px) rotate(1deg)"; }, 80);
+    setTimeout(()=>{ machine.style.transform = "translateX(0) rotate(0)"; }, 160);
+    setTimeout(pullGacha, 220);
+  };
+
+  document.getElementById("startTaskBtn").onclick = startTimer;
+  document.getElementById("rerollBtn").onclick = pullGacha;
+  document.getElementById("skipBtn").onclick = ()=>{
+    closeResultModal();
+    toast("スキップしました。気が向いたらまた引いてね");
+  };
+  document.getElementById("timerDoneBtn").onclick = completeCurrentTask;
+
+  document.getElementById("addTaskBtn").onclick = addTask;
+  document.getElementById("newTaskText").addEventListener("keydown", e=>{
+    if(e.key === "Enter") addTask();
+  });
+
+  document.getElementById("completeCloseBtn").onclick = ()=>{
+    document.getElementById("completeModal").classList.remove("show");
+    switchTab("collection");
+  };
+  document.getElementById("completeCloseBtn2").onclick = ()=>{
+    document.getElementById("completeModal").classList.remove("show");
+  };
+}
+
+init();
+})();
+
+</script>
+</body>
+</html>
