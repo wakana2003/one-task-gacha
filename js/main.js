@@ -55,6 +55,7 @@ $('skipBtn').onclick = () => {
 $('timerDoneBtn').onclick = completeCurrentTask;
 
 $('addTaskBtn').onclick = addTask;
+$('newTaskDueClear').onclick = () => { $('newTaskDue').value = ''; };
 $('newTaskText').addEventListener('keydown', e => { if (e.key === 'Enter') addTask(); });
 $('micBtn').onclick = startVoice;
 

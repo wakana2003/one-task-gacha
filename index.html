@@ -48,6 +48,11 @@
         <div class="chip-row" id="newTaskCatChips"></div>
         <div class="section-label" style="margin:2px 2px 2px;font-size:11px;">かかる時間の目安</div>
         <div class="chip-row" id="newTaskTimeChips"></div>
+        <div class="section-label" style="margin:2px 2px 2px;font-size:11px;">〆切（任意・設定すると一回きりのタスクになります）</div>
+        <div class="edit-due-row">
+          <input type="date" id="newTaskDue" class="edit-input">
+          <button class="btn btn-secondary" id="newTaskDueClear" type="button">〆切なし</button>
+        </div>
         <button class="add-btn" id="addTaskBtn">＋ 追加する</button>
       </div>
     </div>
@@ -62,7 +67,7 @@
       <div class="stat-box"><div class="stat-num" id="statTotal">0</div><div class="stat-label">累計カプセル</div></div>
       <div class="stat-box"><div class="stat-num" id="statStreak">0</div><div class="stat-label">連続日数</div></div>
     </div>
-    <div class="section-label"><span class="bar" style="background:var(--gold)"></span>レアカプセル（大当たり産）</div>
+    <div class="section-label"><span class="bar" style="background:var(--gold)"></span>休憩カプセル（休憩タスク産）</div>
     <div class="card"><div class="rare-row" id="rareRow"></div></div>
     <div id="dexContainer"></div>
   </div>
@@ -82,7 +87,7 @@
       <div class="capsule-big" id="revealCapsule"></div>
     </div>
     <div class="result-card" id="resultCard">
-      <div id="jackpotBanner" style="display:none" class="jackpot-banner">✨ 大当たり！ラッキータスク ✨</div>
+      <div id="jackpotBanner" style="display:none" class="jackpot-banner">✨ 大当たり！休憩タスク ✨</div>
       <span class="task-badge" id="resultBadge"></span>
       <p class="result-title" id="resultTitle">-</p>
       <div class="result-meta">

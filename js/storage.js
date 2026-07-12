@@ -250,7 +250,8 @@ const LUCKY_TASKS = [
   { text: '5分だけ目を閉じて休む', minutes: 5 },
   { text: 'お気に入りの写真を見返す', minutes: 2 },
 ];
-const JACKPOT_CHANCE = 0.12;
+const JACKPOT_CHANCE = 0.12; // 休憩タスク（大当たり）が出る確率
+const RARE_CHANCE = 0.05;    // タスク完了時にレア動物（各カテゴリ図鑑の12個目）が出る確率。ここを変えれば調整できる
 
 // ---- 日付ヘルパー（ローカル時刻基準）----
 const dateToStr = d =>
