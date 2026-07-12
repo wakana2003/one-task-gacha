@@ -199,11 +199,14 @@ function completeCurrentTask() {
   st.todayCount += 1;
   save();
 
+  const wasOnTime = timerRemaining >= 0;
   $('completeEmoji').innerHTML =
     `<img src="${img}" alt="獲得したどうぶつ" class="get-img${isRare ? ' rare' : ''}">`;
   $('completeSub').textContent = isRare
     ? 'レアカプセルだ…！おつかれさま'
-    : `「${currentPick.text}」やりきった！`;
+    : (wasOnTime)
+    ? `wonderful！ 時間内に「${currentPick.text}」をやりきった！`
+    : `great！「${currentPick.text}」をやりきった！`;
   $('completeModal').classList.add('show');
   confetti(30);
   currentPick = null;
