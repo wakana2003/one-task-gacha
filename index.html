@@ -134,6 +134,24 @@
   </div>
 </div>
 
+<!-- ===== ANIMAL DETAIL MODAL ===== -->
+<div class="modal-overlay" id="animalModal">
+  <div class="modal-sheet animal-detail-sheet">
+    <div class="modal-drag"></div>
+    <div class="animal-detail-stage">
+      <img id="animalDetailImg" class="animal-detail-img" src="" alt="">
+    </div>
+    <div class="animal-detail-body">
+      <span class="task-badge animal-detail-badge" id="animalDetailBadge">どうぶつ</span>
+      <p class="result-title" id="animalDetailName">-</p>
+      <p class="animal-detail-count" id="animalDetailCount">-</p>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" id="animalDetailCloseBtn">閉じる</button>
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <!-- 読み込み順が大事: 状態 → タスク → ガチャ → 図鑑 → 演出 → 音声 → 初期化 -->

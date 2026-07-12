@@ -19,10 +19,11 @@ function renderDex() {
     if (filled) {
       const el = document.createElement('img');
       el.src = img;
-      el.alt = 'レアどうぶつ';
+      el.alt = animalName(img);
       el.className = 'dex-img';
       slot.appendChild(el);
-      slot.title = `× ${state.rareDex[img]}`;
+      slot.title = `${animalName(img)} × ${state.rareDex[img]}`;
+      slot.onclick = () => openAnimalModal(img, state.rareDex[img], true);
     } else {
       slot.textContent = '?';
       slot.title = '未獲得';
@@ -55,10 +56,11 @@ function renderDex() {
         slot.style.border = `1px solid ${cat.hex}55`;
         const el = document.createElement('img');
         el.src = img;
-        el.alt = 'どうぶつ';
+        el.alt = animalName(img);
         el.className = 'dex-img';
         slot.appendChild(el);
-        slot.title = `× ${state.dex[key]}`;
+        slot.title = `${animalName(img)} × ${state.dex[key]}`;
+        slot.onclick = () => openAnimalModal(img, state.dex[key], false);
       } else {
         slot.title = '未獲得';
       }
@@ -66,4 +68,20 @@ function renderDex() {
     });
     container.appendChild(group);
   });
+}
+
+// ---- 動物の詳細モーダル ----
+function openAnimalModal(img, count, isRare) {
+  const imgEl = $('animalDetailImg');
+  imgEl.src = img;
+  imgEl.alt = animalName(img);
+  imgEl.classList.toggle('rare', isRare);
+  $('animalDetailName').textContent = animalName(img);
+  $('animalDetailBadge').textContent = isRare ? '✨ レアどうぶつ' : 'どうぶつ';
+  $('animalDetailBadge').classList.toggle('rare', isRare);
+  $('animalDetailCount').textContent = `これまでに ${count} 回 手に入れた`;
+  $('animalModal').classList.add('show');
+}
+function closeAnimalModal() {
+  $('animalModal').classList.remove('show');
 }

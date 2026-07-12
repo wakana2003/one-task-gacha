@@ -76,3 +76,6 @@ $('editDueClear').onclick = () => {
 $('editDue').addEventListener('change', () => {
   if ($('editDue').value) { editFreq = 0; renderEditChips(); } // 〆切を入れたら一回きりに
 });
+
+// 動物詳細モーダル
+$('animalDetailCloseBtn').onclick = closeAnimalModal;
