@@ -26,7 +26,8 @@ function renderCatChips() {
   const all = document.createElement('button');
   all.className = 'chip' + (selectedCat === 'all' ? ' selected' : '');
   all.dataset.cat = 'all';
-  all.textContent = '🎯 すべて';
+  // all.textContent = '🎯 すべて';
+  all.innerHTML = `${catIcon('icon/character_kamisama_gold.png')} すべて`;
   all.onclick = () => { selectedCat = 'all'; renderCatChips(); updatePullHint(); };
   el.appendChild(all);
   CATEGORIES.forEach(c => {
@@ -112,7 +113,7 @@ function renderTaskList() {
         <div class="task-text">${escapeHtml(t.text)}</div>
         <div class="task-tags">${tags}</div>
       </div>
-      <button class="task-edit" data-id="${t.id}" title="編集">✏️</button>
+      <button class="task-edit" data-id="${t.id}" title="編集">${catIcon('icon/enpitsu_yellow.png')}</button>
       <button class="task-del" data-id="${t.id}" title="削除">✕</button>
     `;
     row.querySelector('.task-edit').onclick = () => openEditModal(t.id);
@@ -136,7 +137,7 @@ function addTask() {
   if (!text) { toast('タスクの内容を入力してください'); return; }
   registerTask({ text, category: newTaskCat, minutes: newTaskTime, freq: 1, due: null });
   input.value = '';
-  toast('タスクを追加しました 🎉');
+  toast(`タスクを追加しました ${catIcon('icon/pen.png')}`);
 }
 
 // ---- 編集モーダル ----
@@ -224,7 +225,7 @@ function saveEdit() {
   closeEditModal();
   renderTaskList();
   updatePullHint();
-  toast('タスクを更新しました ✏️');
+  toast(`タスクを更新しました ${catIcon('icon/enpitsu_yellow.png')}`);
 }
 
 function closeEditModal() {
