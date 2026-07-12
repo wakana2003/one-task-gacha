@@ -28,6 +28,9 @@ document.querySelectorAll('.nav-btn').forEach(b => {
 
 $('pullBtn').onclick = () => {
   const machine = $('machineWrap');
+  pullSound.currentTime = 0;        // 連打しても毎回頭から鳴る
+  pullSound.play().catch(() => {}); // 再生できない環境でもエラーで止めない
+  setTimeout(() => pullSound.pause(), 1000);
   machine.style.transition = 'transform .08s';
   machine.style.transform = 'translateX(-4px) rotate(-1deg)';
   setTimeout(() => { machine.style.transform = 'translateX(4px) rotate(1deg)'; }, 80);
