@@ -3,7 +3,9 @@
 // ============================================
 
 const pullSound = new Audio('music/ガチャガチャ・カプセルトイ.mp3');
+const rollSound = new Audio('music/小さい容器・開ける02.mp3'); 
 pullSound.volume = 0.6; 
+rollSound.volume = 0.6; 
 
 // ---- マシンのSVG描画 ----
 function renderMachine() {
