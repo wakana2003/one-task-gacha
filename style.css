@@ -364,14 +364,43 @@ body{
 }
 .rare-slot.filled{background:linear-gradient(160deg,#ffe08a,var(--gold)); border-color:transparent;}
 /* ---------- Toast ---------- */
-.toast{
+/* .toast{
   position:fixed; top:16px; left:50%; transform:translateX(-50%) translateY(-20px);
   background:var(--panel-2); border:1px solid var(--panel-edge); color:var(--text);
   padding:10px 18px; border-radius:999px; font-size:12.5px; z-index:200;
   opacity:0; transition:.25s; pointer-events:none;
   max-width:92vw;
+} */
+.toast{
+  position:fixed;
+  top:16px;
+  left:50%;
+  transform:translateX(-50%) translateY(-20px);
+  background:var(--panel-2);
+  border:1px solid var(--panel-edge);
+  color:var(--text);
+  padding:10px 18px;
+  border-radius:999px;
+  font-size:12.5px;
+  z-index:200;
+  opacity:0;
+  transition:.25s;
+  pointer-events:none;
+  max-width:92vw;
 }
-.toast.show{opacity:1; transform:translateX(-50%) translateY(0);}
+
+.toast img{
+  width:18px;
+  height:18px;
+  vertical-align:middle;
+  margin-right:6px;
+}
+
+.toast.show{
+  opacity:1;
+  transform:translateX(-50%) translateY(0);
+}
+
 /* ---------- Confetti ---------- */
 .confetti{
   position:fixed;
@@ -382,3 +411,26 @@ body{
   z-index:300;
 }
 @keyframes fall{ to{ transform:translateY(110vh) rotate(720deg); opacity:.3; } }
+/* ---------- Dot animal images ---------- */
+.dex-img{
+  width:86%; height:86%;
+  object-fit:contain;
+  image-rendering:pixelated;
+}
+.get-img{
+  width:96px; height:96px;
+  object-fit:contain;
+  image-rendering:pixelated;
+  animation:dropIn .5s cubic-bezier(.3,1.4,.5,1);
+}
+.get-img.rare{
+  filter:drop-shadow(0 0 14px rgba(255,216,77,.8));
+}
+/* ---------- Category icon images ---------- */
+.cat-icon{
+  width:1.15em; height:1.15em;
+  object-fit:contain;
+  vertical-align:-0.2em;
+  image-rendering:pixelated;
+}
+.chip .cat-icon{ vertical-align:middle; }

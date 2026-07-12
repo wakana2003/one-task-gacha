@@ -1,5 +1,5 @@
 // ============================================
-// dex.js — 図鑑と統計の表示
+// dex.js — 図鑑と統計の表示（ドット動物の画像版）
 // ============================================
 
 function renderStats() {
@@ -12,12 +12,21 @@ function renderDex() {
   // レアカプセル
   const rareRow = $('rareRow');
   rareRow.innerHTML = '';
-  RARE_POOL.forEach(ch => {
-    const filled = !!state.rareDex[ch];
+  RARE_POOL.forEach(img => {
+    const filled = !!state.rareDex[img];
     const slot = document.createElement('div');
     slot.className = 'rare-slot' + (filled ? ' filled' : '');
-    slot.textContent = filled ? ch : '?';
-    slot.title = filled ? `${ch} × ${state.rareDex[ch]}` : '未獲得';
+    if (filled) {
+      const el = document.createElement('img');
+      el.src = img;
+      el.alt = 'レアどうぶつ';
+      el.className = 'dex-img';
+      slot.appendChild(el);
+      slot.title = `× ${state.rareDex[img]}`;
+    } else {
+      slot.textContent = '?';
+      slot.title = '未獲得';
+    }
     rareRow.appendChild(slot);
   });
 
@@ -25,25 +34,34 @@ function renderDex() {
   const container = $('dexContainer');
   container.innerHTML = '';
   CATEGORIES.forEach(cat => {
+    const pool = DEX_POOL[cat.id] || [];
     const group = document.createElement('div');
     group.className = 'dex-group';
-    const collected = CHAR_POOL.filter(ch => state.dex[cat.id + '|' + ch]).length;
+    const collected = pool.filter(img => state.dex[cat.id + '|' + img]).length;
     group.innerHTML = `
       <div class="dex-cat-title">
         <span class="dex-cat-dot" style="background:${cat.hex}"></span>
-        ${cat.emoji} ${cat.id} <span style="color:var(--text-dim);font-weight:400;">（${collected}/${CHAR_POOL.length}）</span>
+        ${catIcon(cat.emoji)} ${cat.id} <span style="color:var(--text-dim);font-weight:400;">（${collected}/${pool.length}）</span>
       </div>
       <div class="dex-grid"></div>
     `;
     const grid = group.querySelector('.dex-grid');
-    CHAR_POOL.forEach(ch => {
-      const key = cat.id + '|' + ch;
+    pool.forEach(img => {
+      const key = cat.id + '|' + img;
       const filled = !!state.dex[key];
       const slot = document.createElement('div');
       slot.className = 'dex-slot' + (filled ? ' filled' : '');
-      if (filled) slot.style.border = `1px solid ${cat.hex}55`;
-      slot.textContent = filled ? ch : '';
-      slot.title = filled ? `${ch} × ${state.dex[key]}` : '未獲得';
+      if (filled) {
+        slot.style.border = `1px solid ${cat.hex}55`;
+        const el = document.createElement('img');
+        el.src = img;
+        el.alt = 'どうぶつ';
+        el.className = 'dex-img';
+        slot.appendChild(el);
+        slot.title = `× ${state.dex[key]}`;
+      } else {
+        slot.title = '未獲得';
+      }
       grid.appendChild(slot);
     });
     container.appendChild(group);

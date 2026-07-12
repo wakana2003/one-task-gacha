@@ -7,14 +7,20 @@ const KEY = 'taskGachaV2';
 
 // ---- カテゴリ定義（増やすときはここに足す）----
 const CATEGORIES = [
-  { id: '仕事',   hex: '#ff6fa5', emoji: '💼' },
-  { id: '家事',   hex: '#3fe0b8', emoji: '🧹' },
-  { id: '勉強',   hex: '#6ec8ff', emoji: '📚' },
-  { id: '健康',   hex: '#ffc845', emoji: '💪' },
-  { id: '趣味',   hex: '#b48cff', emoji: '🎨' },
-  { id: 'その他', hex: '#9aa0c7', emoji: '🗂️' },
+  { id: '仕事',   hex: '#ff6fa5', emoji: 'icon/businessbag_black.png' },
+  { id: '家事',   hex: '#3fe0b8', emoji: 'icon/flypan_kako_red.png' },
+  { id: '勉強',   hex: '#6ec8ff', emoji: 'icon/book_open_blue.png' },
+  { id: '健康',   hex: '#ffc845', emoji: 'icon/ball_soccer.png' },
+  { id: '趣味',   hex: '#b48cff', emoji: 'icon/drink_hotcoffee.png' },
+  { id: 'その他', hex: '#9aa0c7', emoji: 'icon/folder_green.png' },
 ];
 const catInfo = id => CATEGORIES.find(c => c.id === id) || CATEGORIES[CATEGORIES.length - 1];
+
+// 絵文字でも画像パスでも表示できるようにするヘルパー
+// （.png なら <img> タグに、絵文字ならそのまま文字として返す）
+const catIcon = e => e && e.endsWith('.png')
+  ? `<img src="${e}" class="cat-icon" alt="">`
+  : e;
 
 // ---- ガチャで使う時間の選択肢 ----
 const TIME_OPTIONS = [
@@ -26,8 +32,101 @@ const TIME_OPTIONS = [
 ];
 
 // ---- 図鑑・大当たり ----
-const CHAR_POOL = ['🐣','🐰','🦊','🐻','🐼','🐨','🐸','🐧','🦉','🐢','🐙','🐳'];
-const RARE_POOL = ['🌟','🍀','⭐','🎆'];
+// カテゴリごとに12種のドット動物。全76種すべて別の動物
+const DEX_POOL = {
+  '仕事': [
+    'dot_animal_png/morumotto_albino.png',
+    'dot_animal_png/hebi.png',
+    'dot_animal_png/tasmaniadevil.png',
+    'dot_animal_png/buta.png',
+    'dot_animal_png/inoshishi.png',
+    'dot_animal_png/fennec.png',
+    'dot_animal_png/harinezumi.png',
+    'dot_animal_png/hato_white.png',
+    'dot_animal_png/seiuchi.png',
+    'dot_animal_png/kitsune_02_leaf_yellowgreen.png',
+    'dot_animal_png/hamster_gray.png',
+    'dot_animal_png/lesser_panda.png',
+  ],
+  '家事': [
+    'dot_animal_png/ferret.png',
+    'dot_animal_png/ottosei.png',
+    'dot_animal_png/saru_nihonzaru.png',
+    'dot_animal_png/kangaroo.png',
+    'dot_animal_png/usagi_black.png',
+    'dot_animal_png/taka_white.png',
+    'dot_animal_png/uribo_01.png',
+    'dot_animal_png/koala.png',
+    'dot_animal_png/fukuro_menfukuro.png',
+    'dot_animal_png/suzume.png',
+    'dot_animal_png/kawauso.png',
+    'dot_animal_png/itachi.png',
+  ],
+  '勉強': [
+    'dot_animal_png/gorilla.png',
+    'dot_animal_png/namakemono.png',
+    'dot_animal_png/yagi_shiroyagi.png',
+    'dot_animal_png/tsuru.png',
+    'dot_animal_png/kamonohashi.png',
+    'dot_animal_png/ahiru.png',
+    'dot_animal_png/hiyoko.png',
+    'dot_animal_png/beaver.png',
+    'dot_animal_png/kamo_female.png',
+    'dot_animal_png/shimaenaga.png',
+    'dot_animal_png/niwatori_female.png',
+    'dot_animal_png/mejiro.png',
+  ],
+  '健康': [
+    'dot_animal_png/ashika.png',
+    'dot_animal_png/momonga_ezomomonga.png',
+    'dot_animal_png/kirin_yellow.png',
+    'dot_animal_png/capybara.png',
+    'dot_animal_png/uma_black.png',
+    'dot_animal_png/tanuki_leaf_yellowgreen.png',
+    'dot_animal_png/ushi_black_tsuno.png',
+    'dot_animal_png/rakko.png',
+    'dot_animal_png/zo.png',
+    'dot_animal_png/sekiseiinko_greenkei_female.png',
+    'dot_animal_png/iruka.png',
+    'dot_animal_png/manatee.png',
+  ],
+  '趣味': [
+    'dot_animal_png/sai.png',
+    'dot_animal_png/azarashi_gomafuazarashi.png',
+    'dot_animal_png/panda_02.png',
+    'dot_animal_png/tonakai.png',
+    'dot_animal_png/okojo_natsuge.png',
+    'dot_animal_png/risu_02.png',
+    'dot_animal_png/todo.png',
+    'dot_animal_png/karasu.png',
+    'dot_animal_png/quokka.png',
+    'dot_animal_png/kaba.png',
+    'dot_animal_png/marmot.png',
+    'dot_animal_png/alpaca_gray.png',
+  ],
+  'その他': [
+    'dot_animal_png/meerkat.png',
+    'dot_animal_png/okami_halloween_white.png',
+    'dot_animal_png/dog_chihuahua_long_red.png',
+    'dot_animal_png/uguisu.png',
+    'dot_animal_png/kaeru_02.png',
+    'dot_animal_png/kuma_shirokuma.png',
+    'dot_animal_png/tsubame.png',
+    'dot_animal_png/nezumi_black.png',
+    'dot_animal_png/komori_02.png',
+    'dot_animal_png/manulneko.png',
+    'dot_animal_png/penguin_adeliepenguin.png',
+    'dot_animal_png/hakucho_hina.png',
+  ],
+};
+// レア（大当たり産）は特別感のある4種
+const RARE_POOL = [
+  'dot_animal_png/ryu.png',
+  'dot_animal_png/tora_whitetiger.png',
+  'dot_animal_png/hyo_kurohyo.png',
+  'dot_animal_png/lion_whitelion_male.png',
+];
+const DEX_SIZE = 12; // 1カテゴリあたりの図鑑枠数
 const LUCKY_TASKS = [
   { text: '1分だけ深呼吸する', minutes: 1 },
   { text: '好きな音楽を1曲だけ聴く', minutes: 3 },
@@ -110,7 +209,7 @@ let timerRemaining = 0;
 let toastTimer = null;
 function toast(msg) {
   const el = $('toast');
-  el.textContent = msg;
+  el.innerHTML = msg;
   el.classList.add('show');
   clearTimeout(toastTimer);
   toastTimer = setTimeout(() => el.classList.remove('show'), 2200);

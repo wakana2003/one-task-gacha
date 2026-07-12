@@ -33,7 +33,7 @@ function renderCatChips() {
     const chip = document.createElement('button');
     chip.className = 'chip' + (selectedCat === c.id ? ' selected' : '');
     chip.dataset.cat = c.id;
-    chip.textContent = `${c.emoji} ${c.id}`;
+    chip.innerHTML = `${catIcon(c.emoji)} ${c.id}`;
     chip.onclick = () => { selectedCat = c.id; renderCatChips(); updatePullHint(); };
     el.appendChild(chip);
   });
@@ -59,7 +59,7 @@ function renderNewTaskCatChips() {
     const chip = document.createElement('button');
     chip.className = 'chip' + (newTaskCat === c.id ? ' selected' : '');
     chip.dataset.cat = c.id;
-    chip.textContent = `${c.emoji} ${c.id}`;
+    chip.innerHTML = `${catIcon(c.emoji)} ${c.id}`;
     chip.onclick = () => { newTaskCat = c.id; renderNewTaskCatChips(); };
     el.appendChild(chip);
   });
@@ -99,7 +99,7 @@ function renderTaskList() {
     const row = document.createElement('div');
     row.className = 'task-item' + (due ? '' : ' sleeping');
 
-    let tags = `${info.emoji} ${t.category} ・ 約${t.minutes}分 ・ ${freqText(t.freq)}`;
+    let tags = `${catIcon(info.emoji)} ${t.category} ・ 約${t.minutes}分 ・ ${freqText(t.freq)}`;
     if (t.due) {
       const overdue = t.due < todayISO();
       tags += ` ・ <span class="${overdue ? 'overdue' : ''}">〆${t.due.slice(5).replace('-', '/')}${overdue ? ' ⚠過ぎてる！' : ''}</span>`;
@@ -174,7 +174,7 @@ function renderEditChips() {
     const chip = document.createElement('button');
     chip.className = 'chip' + (editCat === c.id ? ' selected' : '');
     chip.dataset.cat = c.id;
-    chip.textContent = `${c.emoji} ${c.id}`;
+    chip.innerHTML = `${catIcon(c.emoji)} ${c.id}`;
     chip.onclick = () => { editCat = c.id; renderEditChips(); };
     catEl.appendChild(chip);
   });

@@ -83,7 +83,7 @@ function pullGacha() {
     const picked = urgent[Math.floor(Math.random() * urgent.length)];
     currentPick = { id: picked.id, text: picked.text, minutes: picked.minutes, category: picked.category, isJackpot: false };
     showResultModal();
-    toast('⏰ 〆切のタスクだよ！今日中にやろう');
+    toast('<img src="icon/fukidashi_exclamation_yellow.png" alt="!"> 〆切のタスクだよ！今日中にやろう');
     return;
   }
 
@@ -107,7 +107,7 @@ function pullGacha() {
 
 function showResultModal() {
   const capsuleEl = $('revealCapsule');
-  const info = currentPick.isJackpot ? { hex: '#ffd84d', emoji: '🍀' } : catInfo(currentPick.category);
+  const info = currentPick.isJackpot ? { hex: '#ffd84d', emoji: 'icon/clover_four.png' } : catInfo(currentPick.category);
   capsuleEl.style.background = `radial-gradient(circle at 35% 30%, #ffffff55, ${info.hex})`;
   capsuleEl.classList.remove('pop');
   void capsuleEl.offsetWidth; // アニメを再スタート
@@ -116,7 +116,7 @@ function showResultModal() {
   const badge = $('resultBadge');
   badge.style.background = info.hex;
   badge.style.color = '#241021';
-  badge.textContent = `${info.emoji} ${currentPick.category}`;
+  badge.innerHTML = `${catIcon(info.emoji)} ${currentPick.category}`;
   $('resultTitle').textContent = currentPick.text;
   $('resultTime').textContent = `目安 ${currentPick.minutes}分`;
   const card = $('resultCard');
@@ -157,15 +157,16 @@ function completeCurrentTask() {
   clearInterval(timerInterval);
   $('timerBar').classList.remove('show');
 
-  // 図鑑への追加
-  let emoji;
+  // 図鑑への追加（獲得するのはドット動物の画像）
+  let img;
   const isRare = currentPick.isJackpot;
   if (isRare) {
-    emoji = RARE_POOL[Math.floor(Math.random() * RARE_POOL.length)];
-    state.rareDex[emoji] = (state.rareDex[emoji] || 0) + 1;
+    img = RARE_POOL[Math.floor(Math.random() * RARE_POOL.length)];
+    state.rareDex[img] = (state.rareDex[img] || 0) + 1;
   } else {
-    emoji = CHAR_POOL[Math.floor(Math.random() * CHAR_POOL.length)];
-    const key = currentPick.category + '|' + emoji;
+    const pool = DEX_POOL[currentPick.category] || DEX_POOL['その他'];
+    img = pool[Math.floor(Math.random() * pool.length)];
+    const key = currentPick.category + '|' + img;
     state.dex[key] = (state.dex[key] || 0) + 1;
   }
 
@@ -198,7 +199,8 @@ function completeCurrentTask() {
   st.todayCount += 1;
   save();
 
-  $('completeEmoji').textContent = emoji;
+  $('completeEmoji').innerHTML =
+    `<img src="${img}" alt="獲得したどうぶつ" class="get-img${isRare ? ' rare' : ''}">`;
   $('completeSub').textContent = isRare
     ? 'レアカプセルだ…！おつかれさま'
     : `「${currentPick.text}」やりきった！`;
