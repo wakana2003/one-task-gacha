@@ -241,12 +241,12 @@ function completeCurrentTask() {
   $('completeSub').textContent = isRare
     ? '休憩カプセルだ…！おつかれさま'
     : gotRare
-      ? `「${currentPick.text}」やりきった！✨レア動物をゲット！`
+      ? `「${currentPick.text}」やりきった！レア動物をゲット！`
       : `「${currentPick.text}」やりきった！`;
   $('completeModal').classList.add('show');
   completeSound.currentTime = 0;
   completeSound.play().catch(() => {}); 
-  confetti(30);
+  confetti(timerRemaining > 0 ? 500 : 30); 
   currentPick = null;
   renderStats();
   renderDex();
