@@ -37,7 +37,6 @@ const DEX_POOL = {
   '仕事': [
     'dot_animal_png/morumotto_albino.png',
     'dot_animal_png/hebi.png',
-    'dot_animal_png/tasmaniadevil.png',
     'dot_animal_png/buta.png',
     'dot_animal_png/inoshishi.png',
     'dot_animal_png/fennec.png',
@@ -47,9 +46,9 @@ const DEX_POOL = {
     'dot_animal_png/kitsune_02_leaf_yellowgreen.png',
     'dot_animal_png/hamster_gray.png',
     'dot_animal_png/lesser_panda.png',
+    'dot_animal_png/tasmaniadevil.png',
   ],
   '家事': [
-    'dot_animal_png/ferret.png',
     'dot_animal_png/ottosei.png',
     'dot_animal_png/saru_nihonzaru.png',
     'dot_animal_png/kangaroo.png',
@@ -61,6 +60,7 @@ const DEX_POOL = {
     'dot_animal_png/suzume.png',
     'dot_animal_png/kawauso.png',
     'dot_animal_png/itachi.png',
+    'dot_animal_png/ferret.png',
   ],
   '勉強': [
     'dot_animal_png/gorilla.png',
@@ -72,9 +72,9 @@ const DEX_POOL = {
     'dot_animal_png/hiyoko.png',
     'dot_animal_png/beaver.png',
     'dot_animal_png/kamo_female.png',
-    'dot_animal_png/shimaenaga.png',
     'dot_animal_png/niwatori_female.png',
     'dot_animal_png/mejiro.png',
+    'dot_animal_png/shimaenaga.png',
   ],
   '健康': [
     'dot_animal_png/ashika.png',
@@ -99,10 +99,10 @@ const DEX_POOL = {
     'dot_animal_png/risu_02.png',
     'dot_animal_png/todo.png',
     'dot_animal_png/karasu.png',
-    'dot_animal_png/quokka.png',
     'dot_animal_png/kaba.png',
     'dot_animal_png/marmot.png',
     'dot_animal_png/alpaca_gray.png',
+    'dot_animal_png/quokka.png',
   ],
   'その他': [
     'dot_animal_png/meerkat.png',
@@ -114,9 +114,9 @@ const DEX_POOL = {
     'dot_animal_png/tsubame.png',
     'dot_animal_png/nezumi_black.png',
     'dot_animal_png/komori_02.png',
-    'dot_animal_png/manulneko.png',
     'dot_animal_png/penguin_adeliepenguin.png',
     'dot_animal_png/hakucho_hina.png',
+    'dot_animal_png/manulneko.png',
   ],
 };
 // レア（大当たり産）は特別感のある4種
