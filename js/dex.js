@@ -82,8 +82,29 @@ function openAnimalModal(img, count, isRare) {
   $('animalDetailBadge').textContent = isRare ? '✨ レアどうぶつ' : 'どうぶつ';
   $('animalDetailBadge').classList.toggle('rare', isRare);
   $('animalDetailCount').textContent = `これまでに ${count} 回 手に入れた`;
+  renderTrophyShelf(count);
+  $('animalDetailProgress').textContent = trophyProgressText(count);
   $('animalModal').classList.add('show');
 }
 function closeAnimalModal() {
   $('animalModal').classList.remove('show');
+}
+
+// 獲得回数に応じたトロフィー段位を棚に並べる
+function renderTrophyShelf(count) {
+  const el = $('animalDetailTrophies');
+  el.innerHTML = '';
+  TROPHY_TIERS.forEach(t => {
+    const achieved = count >= t.threshold;
+    const slot = document.createElement('div');
+    slot.className = 'trophy-slot ' + t.id + (achieved ? ' achieved' : '');
+    slot.innerHTML = `
+      <span class="trophy-icon">${achieved ? catIcon(t.icon) : '🔒'}</span>
+      <span class="trophy-label">${t.label}</span>
+    `;
+    slot.title = achieved
+      ? `${t.label}トロフィー獲得（${t.threshold}回達成）`
+      : `${t.threshold}回集めると解放`;
+    el.appendChild(slot);
+  });
 }

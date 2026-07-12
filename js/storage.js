@@ -220,6 +220,26 @@ function animalName(img) {
   const base = img.split('/').pop().replace('.png', '');
   return base.replace(/_/g, ' ');
 }
+
+// ---- 獲得回数に応じたトロフィー段位 ----
+// icon を画像パスに差し替えれば <img> 表示に切り替わる（catIcon と同じ判定方式）
+const TROPHY_TIERS = [
+  { id: 'bronze',   threshold: 10,    label: 'ブロンズ',   icon: '🥉' },
+  { id: 'silver',   threshold: 100,   label: 'シルバー',   icon: '🥈' },
+  { id: 'gold',     threshold: 1000,  label: 'ゴールド',   icon: '🥇' },
+  { id: 'platinum', threshold: 10000, label: 'プラチナ',   icon: '🏆' },
+];
+// 現在獲得している最高段位（なければ null）
+function currentTrophy(count) {
+  return TROPHY_TIERS.filter(t => count >= t.threshold).pop() || null;
+}
+// 次の段位までの案内文
+function trophyProgressText(count) {
+  const next = TROPHY_TIERS.find(t => count < t.threshold);
+  if (!next) return `${TROPHY_TIERS[TROPHY_TIERS.length - 1].label}トロフィー達成！すごい！`;
+  const remain = next.threshold - count;
+  return `次の${next.label}トロフィーまであと ${remain} 回`;
+}
 const LUCKY_TASKS = [
   { text: '1分だけ深呼吸する', minutes: 1 },
   { text: '好きな音楽を1曲だけ聴く', minutes: 3 },
