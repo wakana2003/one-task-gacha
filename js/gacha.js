@@ -4,6 +4,7 @@
 
 const pullSound = new Audio('music/ガチャガチャ・カプセルトイ.mp3');
 const rollSound = new Audio('music/小さい容器・開ける02.mp3'); 
+const completeSound = new Audio('music/貯金箱.mp3');
 pullSound.volume = 0.6; 
 rollSound.volume = 0.6; 
 
@@ -94,7 +95,7 @@ function pullGacha() {
 
   if (Math.random() < JACKPOT_CHANCE) {
     const lucky = LUCKY_TASKS[Math.floor(Math.random() * LUCKY_TASKS.length)];
-    currentPick = { id: null, text: lucky.text, minutes: lucky.minutes, category: 'ラッキー', isJackpot: true };
+    currentPick = { id: null, text: lucky.text, minutes: lucky.minutes, category: '休憩', isJackpot: true };
     showResultModal();
     return;
   }
@@ -164,13 +165,17 @@ function completeCurrentTask() {
 
   // 図鑑への追加（獲得するのはドット動物の画像）
   let img;
+  let gotRare = false; // カテゴリのレア動物（12個目）を引いたか
   const isRare = currentPick.isJackpot;
   if (isRare) {
     img = RARE_POOL[Math.floor(Math.random() * RARE_POOL.length)];
     state.rareDex[img] = (state.rareDex[img] || 0) + 1;
   } else {
     const pool = DEX_POOL[currentPick.category] || DEX_POOL['その他'];
-    img = pool[Math.floor(Math.random() * pool.length)];
+    gotRare = Math.random() < RARE_CHANCE;
+    img = gotRare
+      ? pool[pool.length - 1]                                    // 12個目 = レア動物
+      : pool[Math.floor(Math.random() * (pool.length - 1))];     // 1〜11個目から
     const key = currentPick.category + '|' + img;
     state.dex[key] = (state.dex[key] || 0) + 1;
   }
@@ -205,11 +210,15 @@ function completeCurrentTask() {
   save();
 
   $('completeEmoji').innerHTML =
-    `<img src="${img}" alt="獲得したどうぶつ" class="get-img${isRare ? ' rare' : ''}">`;
+    `<img src="${img}" alt="獲得したどうぶつ" class="get-img${(isRare || gotRare) ? ' rare' : ''}">`;
   $('completeSub').textContent = isRare
-    ? 'レアカプセルだ…！おつかれさま'
-    : `「${currentPick.text}」やりきった！`;
+    ? '休憩カプセルだ…！おつかれさま'
+    : gotRare
+      ? `「${currentPick.text}」やりきった！✨レア動物をゲット！`
+      : `「${currentPick.text}」やりきった！`;
   $('completeModal').classList.add('show');
+  completeSound.currentTime = 0;
+  completeSound.play().catch(() => {}); 
   confetti(30);
   currentPick = null;
   renderStats();
