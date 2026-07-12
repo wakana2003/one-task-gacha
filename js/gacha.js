@@ -83,7 +83,7 @@ function pullGacha() {
     const picked = urgent[Math.floor(Math.random() * urgent.length)];
     currentPick = { id: picked.id, text: picked.text, minutes: picked.minutes, category: picked.category, isJackpot: false };
     showResultModal();
-    toast('⏰ 〆切のタスクだよ！今日中にやろう');
+    toast('<img src="icon/fukidashi_exclamation_yellow.png" alt="!"> 〆切のタスクだよ！今日中にやろう');
     return;
   }
 
@@ -107,7 +107,7 @@ function pullGacha() {
 
 function showResultModal() {
   const capsuleEl = $('revealCapsule');
-  const info = currentPick.isJackpot ? { hex: '#ffd84d', emoji: '🍀' } : catInfo(currentPick.category);
+  const info = currentPick.isJackpot ? { hex: '#ffd84d', emoji: 'icon/clover_four.png' } : catInfo(currentPick.category);
   capsuleEl.style.background = `radial-gradient(circle at 35% 30%, #ffffff55, ${info.hex})`;
   capsuleEl.classList.remove('pop');
   void capsuleEl.offsetWidth; // アニメを再スタート
@@ -116,7 +116,7 @@ function showResultModal() {
   const badge = $('resultBadge');
   badge.style.background = info.hex;
   badge.style.color = '#241021';
-  badge.textContent = `${info.emoji} ${currentPick.category}`;
+  badge.innerHTML = `${catIcon(info.emoji)} ${currentPick.category}`;
   $('resultTitle').textContent = currentPick.text;
   $('resultTime').textContent = `目安 ${currentPick.minutes}分`;
   const card = $('resultCard');

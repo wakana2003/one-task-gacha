@@ -41,7 +41,7 @@ function renderDex() {
     group.innerHTML = `
       <div class="dex-cat-title">
         <span class="dex-cat-dot" style="background:${cat.hex}"></span>
-        ${cat.emoji} ${cat.id} <span style="color:var(--text-dim);font-weight:400;">（${collected}/${pool.length}）</span>
+        ${catIcon(cat.emoji)} ${cat.id} <span style="color:var(--text-dim);font-weight:400;">（${collected}/${pool.length}）</span>
       </div>
       <div class="dex-grid"></div>
     `;
