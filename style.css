@@ -404,12 +404,15 @@ body{
 
 /* ---------- Confetti ---------- */
 .confetti{
+  width:20px; height:20px;
+  object-fit:contain;
+  image-rendering:pixelated;
   position:fixed;
   top:-10px;
-  font-size:18px;
   pointer-events:none;
   animation:fall linear forwards;
   z-index:300;
+  /* position, animation などの既存指定はそのまま */
 }
 @keyframes fall{ to{ transform:translateY(110vh) rotate(720deg); opacity:.3; } }
 /* ---------- Dot animal images ---------- */
