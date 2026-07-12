@@ -36,8 +36,25 @@ document.querySelectorAll('.nav-btn').forEach(b => {
   b.onclick = () => switchTab(b.dataset.tab);
 });
 
+// 連打防止: ガチャを引いてから一定時間は再度引けない
+let gachaCooldown = false;
+function startGachaCooldown(ms = 1500) {
+  gachaCooldown = true;
+  $('rerollBtn').disabled = true;
+  $('startTaskBtn').disabled = true;
+  $('skipBtn').disabled = true;
+  setTimeout(() => {
+    gachaCooldown = false;
+    $('rerollBtn').disabled = false;
+    $('startTaskBtn').disabled = false;
+    $('skipBtn').disabled = false;
+  }, ms);
+}
+
 $('pullBtn').onclick = () => {
+  if (gachaCooldown) return;                 // 連打防止
   if (poolForFilters().length === 0) return; // 引けるタスクがなければ音も演出も出さない（保険）
+  startGachaCooldown();
   const machine = $('machineWrap');
   playGachaSound();                 // ← 切り出した関数を呼ぶ
   machine.style.transition = 'transform .08s';
@@ -47,9 +64,18 @@ $('pullBtn').onclick = () => {
   setTimeout(pullGacha, 220);
 };
 
-$('startTaskBtn').onclick = startTimer;
-$('rerollBtn').onclick = () => {playGachaSound();pullGacha();};
+$('startTaskBtn').onclick = () => {
+  if (gachaCooldown) return;   // 連打防止（disabledの保険）
+  startTimer();
+};
+$('rerollBtn').onclick = () => {
+  if (gachaCooldown) return;   // 連打防止
+  startGachaCooldown();
+  playGachaSound();
+  pullGacha();
+};
 $('skipBtn').onclick = () => {
+  if (gachaCooldown) return;   // 連打防止
   closeResultModal();
   toast('スキップしました。気が向いたらまた引いてね');
 };

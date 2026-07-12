@@ -15,6 +15,7 @@ const CATEGORIES = [
   { id: 'その他', hex: '#9aa0c7', emoji: 'icon/folder_green.png' },
 ];
 const catInfo = id => CATEGORIES.find(c => c.id === id) || CATEGORIES[CATEGORIES.length - 1];
+const COLLECTION_CATEGORIES = [...CATEGORIES, { id: '休憩', hex: '#ffd84d', emoji: 'icon/clover_four.png' }];
 
 // 絵文字でも画像パスでも表示できるようにするヘルパー
 // （.png なら <img> タグに、絵文字ならそのまま文字として返す）
@@ -118,14 +119,23 @@ const DEX_POOL = {
     'dot_animal_png/hakucho_hina.png',
     'dot_animal_png/manulneko.png',
   ],
+  '休憩': [
+    'dot_animal_png/ryu.png',
+    'dot_animal_png/tora_whitetiger.png',
+    'dot_animal_png/hyo_kurohyo.png',
+    'dot_animal_png/lion_whitelion_male.png',
+    'dot_animal_png/wombat.png',
+    'dot_animal_png/hitsuji.png',
+    'dot_animal_png/araiguma.png',
+    'dot_animal_png/dugong.png',
+    'dot_animal_png/momonga_americamomonga.png',
+    'dot_animal_png/hakucho.png',
+    'dot_animal_png/penguin_kingpenguin.png',
+    'dot_animal_png/penguin_iwatobipenguin.png',
+  ],
 };
-// レア（大当たり産）は特別感のある4種
-const RARE_POOL = [
-  'dot_animal_png/ryu.png',
-  'dot_animal_png/tora_whitetiger.png',
-  'dot_animal_png/hyo_kurohyo.png',
-  'dot_animal_png/lion_whitelion_male.png',
-];
+// 休憩タスクの図鑑は12種
+const RARE_POOL = DEX_POOL['休憩'];
 const DEX_SIZE = 12; // 1カテゴリあたりの図鑑枠数
 
 // ---- 画像パス → 表示用のどうぶつ名 ----
@@ -208,11 +218,19 @@ const ANIMAL_NAMES = {
   'dot_animal_png/manulneko.png': 'マヌルネコ',
   'dot_animal_png/penguin_adeliepenguin.png': 'ペンギン（アデリーペンギン）',
   'dot_animal_png/hakucho_hina.png': 'ハクチョウ（ヒナ）',
-  // レア（大当たり産）
+  // 休憩
   'dot_animal_png/ryu.png': 'ドラゴン',
   'dot_animal_png/tora_whitetiger.png': 'トラ（ホワイトタイガー）',
   'dot_animal_png/hyo_kurohyo.png': 'ヒョウ（クロヒョウ）',
   'dot_animal_png/lion_whitelion_male.png': 'ライオン（ホワイトライオン）',
+  'dot_animal_png/wombat.png': 'ウォンバット',
+  'dot_animal_png/hitsuji.png': 'ヒツジ',
+  'dot_animal_png/araiguma.png': 'アライグマ',
+  'dot_animal_png/dugong.png': 'ジュゴン',
+  'dot_animal_png/momonga_americamomonga.png': 'モモンガ（アメリカモモンガ）',
+  'dot_animal_png/hakucho.png': 'ハクチョウ',
+  'dot_animal_png/penguin_kingpenguin.png': 'ペンギン（キングペンギン）',
+  'dot_animal_png/penguin_iwatobipenguin.png': 'ペンギン（イワトビペンギン）',
 };
 // 未登録の画像でもファイル名から見た目上の名前を作れるようにしておく（保険）
 function animalName(img) {
@@ -288,6 +306,18 @@ try {
   if (saved) state = Object.assign(state, saved);
 } catch (e) {}
 if (!state.tasks.length && state.stats.total === 0) state.tasks = defaultTasks();
+
+// 旧保存データの休憩図鑑を、通常の 休憩 カテゴリへ統合する
+if (state.rareDex && Object.keys(state.rareDex).length) {
+  RARE_POOL.forEach(img => {
+    const count = state.rareDex[img] || 0;
+    if (count > 0) {
+      const key = `休憩|${img}`;
+      state.dex[key] = (state.dex[key] || 0) + count;
+    }
+  });
+  state.rareDex = {};
+}
 
 // 足りない属性を補完（旧データ対策）
 state.tasks.forEach(t => {

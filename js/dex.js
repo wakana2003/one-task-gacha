@@ -9,32 +9,10 @@ function renderStats() {
 }
 
 function renderDex() {
-  // レアカプセル
-  const rareRow = $('rareRow');
-  rareRow.innerHTML = '';
-  RARE_POOL.forEach(img => {
-    const filled = !!state.rareDex[img];
-    const slot = document.createElement('div');
-    slot.className = 'rare-slot' + (filled ? ' filled' : '');
-    if (filled) {
-      const el = document.createElement('img');
-      el.src = img;
-      el.alt = animalName(img);
-      el.className = 'dex-img';
-      slot.appendChild(el);
-      slot.title = `${animalName(img)} × ${state.rareDex[img]}`;
-      slot.onclick = () => openAnimalModal(img, state.rareDex[img], true);
-    } else {
-      slot.textContent = '?';
-      slot.title = '未獲得';
-    }
-    rareRow.appendChild(slot);
-  });
-
   // カテゴリ別図鑑
   const container = $('dexContainer');
   container.innerHTML = '';
-  CATEGORIES.forEach(cat => {
+  COLLECTION_CATEGORIES.forEach(cat => {
     const pool = DEX_POOL[cat.id] || [];
     const group = document.createElement('div');
     group.className = 'dex-group';
@@ -47,8 +25,8 @@ function renderDex() {
       <div class="dex-grid"></div>
     `;
     const grid = group.querySelector('.dex-grid');
-    pool.forEach((img, i) => {
-      const isRareSlot = i === pool.length - 1; // 12個目はレア動物枠
+    pool.forEach((img, index) => {
+      const isRareSlot = index === pool.length - 1;
       const key = cat.id + '|' + img;
       const filled = !!state.dex[key];
       const slot = document.createElement('div');

@@ -192,11 +192,12 @@ function completeCurrentTask() {
 
   // 図鑑への追加（獲得するのはドット動物の画像）
   let img;
-  let gotRare = false; // カテゴリのレア動物（12個目）を引いたか
+  let gotRare = false; // 休憩タスク以外でレア動物（12個目）を引いたか
   const isRare = currentPick.isJackpot;
   if (isRare) {
     img = RARE_POOL[Math.floor(Math.random() * RARE_POOL.length)];
-    state.rareDex[img] = (state.rareDex[img] || 0) + 1;
+    const key = `休憩|${img}`;
+    state.dex[key] = (state.dex[key] || 0) + 1;
   } else {
     const pool = DEX_POOL[currentPick.category] || DEX_POOL['その他'];
     gotRare = Math.random() < RARE_CHANCE;
