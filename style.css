@@ -320,6 +320,7 @@ body{
 .task-tags .overdue{color:var(--danger); font-weight:700;}
 .task-del{ background:none; border:none; color:var(--text-dim); font-size:16px; cursor:pointer; padding:4px 6px; }
 .task-edit{ background:none; border:none; font-size:15px; cursor:pointer; padding:4px 2px; opacity:.8; }
+.task-edit .cat-icon{width: 24px;height: 24px;}
 /* ---------- Edit modal ---------- */
 .edit-title{ font-family:var(--font-display); font-weight:800; font-size:17px; margin:0 0 4px; text-align:center; }
 .edit-input{
@@ -439,4 +440,11 @@ body{
   width:20px; height:20px;
   object-fit:contain;
   image-rendering:pixelated;
+}
+
+.mic-img{
+  width:30px; height:30px;
+  object-fit:contain;
+  image-rendering:pixelated;
+  vertical-align:middle;
 }
