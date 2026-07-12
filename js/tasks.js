@@ -26,7 +26,8 @@ function renderCatChips() {
   const all = document.createElement('button');
   all.className = 'chip' + (selectedCat === 'all' ? ' selected' : '');
   all.dataset.cat = 'all';
-  all.textContent = '🎯 すべて';
+  // all.textContent = '🎯 すべて';
+  all.innerHTML = `${catIcon('icon/character_kamisama_gold.png')} すべて`;
   all.onclick = () => { selectedCat = 'all'; renderCatChips(); updatePullHint(); };
   el.appendChild(all);
   CATEGORIES.forEach(c => {
