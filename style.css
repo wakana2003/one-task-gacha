@@ -312,7 +312,10 @@ body{
   padding:12px 14px;
   margin-bottom:8px;
 }
-.task-item.sleeping{opacity:.5;}
+.task-item.sleeping .task-dot,
+.task-item.sleeping .task-body,
+.task-item.sleeping .task-edit,
+.task-item.sleeping .task-del{ opacity:.45; }
 .task-dot{width:9px;height:9px;border-radius:50%; flex:none;}
 .task-body{flex:1; min-width:0;}
 .task-text{font-size:13.5px; font-weight:500;}
@@ -530,4 +533,22 @@ body{
 .dex-slot.rare-frame.filled{
   border:1px solid transparent;
   background:linear-gradient(160deg,#ffe08a,var(--gold));
+}
+/* ---------- 復活ボタン ---------- */
+.task-revive{
+  background:var(--mint);
+  color:#0e2b23;
+  border:none;
+  border-radius:999px;
+  font-family:var(--font-body);
+  font-weight:700;
+  font-size:11px;
+  cursor:pointer;
+  padding:6px 10px;
+  flex:none;
+  animation:reviveGlow 1.6s ease-in-out infinite;
+}
+@keyframes reviveGlow{
+  0%,100%{ box-shadow:0 0 4px rgba(63,224,184,.4); }
+  50%{ box-shadow:0 0 14px rgba(63,224,184,.95); }
 }
