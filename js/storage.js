@@ -7,14 +7,20 @@ const KEY = 'taskGachaV2';
 
 // ---- カテゴリ定義（増やすときはここに足す）----
 const CATEGORIES = [
-  { id: '仕事',   hex: '#ff6fa5', emoji: '💼' },
-  { id: '家事',   hex: '#3fe0b8', emoji: '🧹' },
-  { id: '勉強',   hex: '#6ec8ff', emoji: '📚' },
-  { id: '健康',   hex: '#ffc845', emoji: '💪' },
-  { id: '趣味',   hex: '#b48cff', emoji: '🎨' },
-  { id: 'その他', hex: '#9aa0c7', emoji: '🗂️' },
+  { id: '仕事',   hex: '#ff6fa5', emoji: 'icon/businessbag_black.png' },
+  { id: '家事',   hex: '#3fe0b8', emoji: 'icon/flypan_kako_red.png' },
+  { id: '勉強',   hex: '#6ec8ff', emoji: 'icon/book_open_blue.png' },
+  { id: '健康',   hex: '#ffc845', emoji: 'icon/ball_soccer.png' },
+  { id: '趣味',   hex: '#b48cff', emoji: 'icon/drink_hotcoffee.png' },
+  { id: 'その他', hex: '#9aa0c7', emoji: 'icon/folder_green.png' },
 ];
 const catInfo = id => CATEGORIES.find(c => c.id === id) || CATEGORIES[CATEGORIES.length - 1];
+
+// 絵文字でも画像パスでも表示できるようにするヘルパー
+// （.png なら <img> タグに、絵文字ならそのまま文字として返す）
+const catIcon = e => e && e.endsWith('.png')
+  ? `<img src="${e}" class="cat-icon" alt="">`
+  : e;
 
 // ---- ガチャで使う時間の選択肢 ----
 const TIME_OPTIONS = [
@@ -203,7 +209,7 @@ let timerRemaining = 0;
 let toastTimer = null;
 function toast(msg) {
   const el = $('toast');
-  el.textContent = msg;
+  el.innerHTML = msg;
   el.classList.add('show');
   clearTimeout(toastTimer);
   toastTimer = setTimeout(() => el.classList.remove('show'), 2200);
