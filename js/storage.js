@@ -127,6 +127,99 @@ const RARE_POOL = [
   'dot_animal_png/lion_whitelion_male.png',
 ];
 const DEX_SIZE = 12; // 1カテゴリあたりの図鑑枠数
+
+// ---- 画像パス → 表示用のどうぶつ名 ----
+const ANIMAL_NAMES = {
+  // 仕事
+  'dot_animal_png/morumotto_albino.png': 'モルモット（アルビノ）',
+  'dot_animal_png/hebi.png': 'ヘビ',
+  'dot_animal_png/tasmaniadevil.png': 'タスマニアデビル',
+  'dot_animal_png/buta.png': 'ブタ',
+  'dot_animal_png/inoshishi.png': 'イノシシ',
+  'dot_animal_png/fennec.png': 'フェネック',
+  'dot_animal_png/harinezumi.png': 'ハリネズミ',
+  'dot_animal_png/hato_white.png': 'ハト（白）',
+  'dot_animal_png/seiuchi.png': 'セイウチ',
+  'dot_animal_png/kitsune_02_leaf_yellowgreen.png': 'キツネ（黄緑）',
+  'dot_animal_png/hamster_gray.png': 'ハムスター（グレー）',
+  'dot_animal_png/lesser_panda.png': 'レッサーパンダ',
+  // 家事
+  'dot_animal_png/ferret.png': 'フェレット',
+  'dot_animal_png/ottosei.png': 'オットセイ',
+  'dot_animal_png/saru_nihonzaru.png': 'サル（ニホンザル）',
+  'dot_animal_png/kangaroo.png': 'カンガルー',
+  'dot_animal_png/usagi_black.png': 'ウサギ（黒）',
+  'dot_animal_png/taka_white.png': 'タカ（白）',
+  'dot_animal_png/uribo_01.png': 'ウリボウ',
+  'dot_animal_png/koala.png': 'コアラ',
+  'dot_animal_png/fukuro_menfukuro.png': 'フクロウ（メンフクロウ）',
+  'dot_animal_png/suzume.png': 'スズメ',
+  'dot_animal_png/kawauso.png': 'カワウソ',
+  'dot_animal_png/itachi.png': 'イタチ',
+  // 勉強
+  'dot_animal_png/gorilla.png': 'ゴリラ',
+  'dot_animal_png/namakemono.png': 'ナマケモノ',
+  'dot_animal_png/yagi_shiroyagi.png': 'ヤギ（白ヤギ）',
+  'dot_animal_png/tsuru.png': 'ツル',
+  'dot_animal_png/kamonohashi.png': 'カモノハシ',
+  'dot_animal_png/ahiru.png': 'アヒル',
+  'dot_animal_png/hiyoko.png': 'ヒヨコ',
+  'dot_animal_png/beaver.png': 'ビーバー',
+  'dot_animal_png/kamo_female.png': 'カモ（メス）',
+  'dot_animal_png/shimaenaga.png': 'シマエナガ',
+  'dot_animal_png/niwatori_female.png': 'ニワトリ（メス）',
+  'dot_animal_png/mejiro.png': 'メジロ',
+  // 健康
+  'dot_animal_png/ashika.png': 'アシカ',
+  'dot_animal_png/momonga_ezomomonga.png': 'モモンガ（エゾモモンガ）',
+  'dot_animal_png/kirin_yellow.png': 'キリン',
+  'dot_animal_png/capybara.png': 'カピバラ',
+  'dot_animal_png/uma_black.png': 'ウマ（黒）',
+  'dot_animal_png/tanuki_leaf_yellowgreen.png': 'タヌキ（黄緑）',
+  'dot_animal_png/ushi_black_tsuno.png': 'ウシ（黒・角あり）',
+  'dot_animal_png/rakko.png': 'ラッコ',
+  'dot_animal_png/zo.png': 'ゾウ',
+  'dot_animal_png/sekiseiinko_greenkei_female.png': 'セキセイインコ（グリーン系）',
+  'dot_animal_png/iruka.png': 'イルカ',
+  'dot_animal_png/manatee.png': 'マナティー',
+  // 趣味
+  'dot_animal_png/sai.png': 'サイ',
+  'dot_animal_png/azarashi_gomafuazarashi.png': 'アザラシ（ゴマフアザラシ）',
+  'dot_animal_png/panda_02.png': 'パンダ',
+  'dot_animal_png/tonakai.png': 'トナカイ',
+  'dot_animal_png/okojo_natsuge.png': 'オコジョ（夏毛）',
+  'dot_animal_png/risu_02.png': 'リス',
+  'dot_animal_png/todo.png': 'トド',
+  'dot_animal_png/karasu.png': 'カラス',
+  'dot_animal_png/quokka.png': 'クオッカ',
+  'dot_animal_png/kaba.png': 'カバ',
+  'dot_animal_png/marmot.png': 'マーモット',
+  'dot_animal_png/alpaca_gray.png': 'アルパカ（グレー）',
+  // その他
+  'dot_animal_png/meerkat.png': 'ミーアキャット',
+  'dot_animal_png/okami_halloween_white.png': 'オオカミ（白）',
+  'dot_animal_png/dog_chihuahua_long_red.png': 'チワワ（長毛・レッド）',
+  'dot_animal_png/uguisu.png': 'ウグイス',
+  'dot_animal_png/kaeru_02.png': 'カエル',
+  'dot_animal_png/kuma_shirokuma.png': 'クマ（シロクマ）',
+  'dot_animal_png/tsubame.png': 'ツバメ',
+  'dot_animal_png/nezumi_black.png': 'ネズミ（黒）',
+  'dot_animal_png/komori_02.png': 'コウモリ',
+  'dot_animal_png/manulneko.png': 'マヌルネコ',
+  'dot_animal_png/penguin_adeliepenguin.png': 'ペンギン（アデリーペンギン）',
+  'dot_animal_png/hakucho_hina.png': 'ハクチョウ（ヒナ）',
+  // レア（大当たり産）
+  'dot_animal_png/ryu.png': 'ドラゴン',
+  'dot_animal_png/tora_whitetiger.png': 'トラ（ホワイトタイガー）',
+  'dot_animal_png/hyo_kurohyo.png': 'ヒョウ（クロヒョウ）',
+  'dot_animal_png/lion_whitelion_male.png': 'ライオン（ホワイトライオン）',
+};
+// 未登録の画像でもファイル名から見た目上の名前を作れるようにしておく（保険）
+function animalName(img) {
+  if (ANIMAL_NAMES[img]) return ANIMAL_NAMES[img];
+  const base = img.split('/').pop().replace('.png', '');
+  return base.replace(/_/g, ' ');
+}
 const LUCKY_TASKS = [
   { text: '1分だけ深呼吸する', minutes: 1 },
   { text: '好きな音楽を1曲だけ聴く', minutes: 3 },
