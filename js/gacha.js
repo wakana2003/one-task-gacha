@@ -123,10 +123,25 @@ function pullGacha() {
   showResultModal();
 }
 
+// カテゴリごとのカプセル（底）の色
+const CAPSULE_SOKO_BY_CAT = {
+  '仕事':   'capsule/gacha_capsule_soko_red_nl.png',
+  '家事':   'capsule/gacha_capsule_soko_green_nl.png',
+  '勉強':   'capsule/gacha_capsule_soko_blue_nl.png',
+  '健康':   'capsule/gacha_capsule_soko_yellow_nl.png',
+  '趣味':   'capsule/gacha_capsule_soko_red_nl.png',
+  'その他': 'capsule/gacha_capsule_soko_blue_nl.png',
+  '休憩':   'capsule/gacha_capsule_soko_yellow_nl.png',
+};
+
 function showResultModal() {
   const capsuleEl = $('revealCapsule');
   const info = currentPick.isJackpot ? { hex: '#ffd84d', emoji: 'icon/clover_four.png' } : catInfo(currentPick.category);
-  capsuleEl.style.background = `radial-gradient(circle at 35% 30%, #ffffff55, ${info.hex})`;
+  const soko = CAPSULE_SOKO_BY_CAT[currentPick.category] || 'capsule/gacha_capsule_soko_red_nl.png';
+  // 蓋と底の2枚を重ねて、開く演出（CSSアニメ）で上下に分かれる
+  capsuleEl.innerHTML = `
+    <img class="cap-half cap-soko" src="${soko}" alt="">
+    <img class="cap-half cap-futa" src="capsule/gacha_capsule_futa_nl.png" alt="カプセル">`;
   capsuleEl.classList.remove('pop');
   void capsuleEl.offsetWidth; // アニメを再スタート
   capsuleEl.classList.add('pop');

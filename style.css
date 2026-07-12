@@ -189,21 +189,36 @@ body{
 /* ---------- Capsule reveal ---------- */
 .reveal-stage{ display:flex; justify-content:center; align-items:center; padding:10px 0 6px; min-height:120px; }
 .capsule-big{
-  width:96px;height:96px;
-  border-radius:50%;
+  width:96px;height:103px; /* 蓋+底を重ねた完全体の縦横比(500x535)に合わせる */
   position:relative;
   animation:dropIn .5s cubic-bezier(.3,1.4,.5,1);
 }
+.cap-half{
+  position:absolute;
+  left:0;
+  width:96px;
+  height:auto;
+  image-rendering:pixelated;
+}
+.cap-futa{ top:0; z-index:2; }
+.cap-soko{ top:34px; z-index:1; } /* 画像仕様上、真ん中で34pxほど重なる */
 @keyframes dropIn{
   0%{transform:translateY(-140px) scale(.6); opacity:0;}
   60%{transform:translateY(8px) scale(1.05); opacity:1;}
   100%{transform:translateY(0) scale(1);}
 }
-.capsule-big.pop{animation:dropIn .5s cubic-bezier(.3,1.4,.5,1), popOpen .35s ease .55s forwards;}
-@keyframes popOpen{
-  0%{transform:scale(1);}
-  40%{transform:scale(1.25) rotate(-4deg);}
-  100%{transform:scale(0); opacity:0;}
+.capsule-big.pop{animation:dropIn .5s cubic-bezier(.3,1.4,.5,1);}
+.capsule-big.pop .cap-futa{ animation:futaOpen .55s ease .55s forwards; }
+.capsule-big.pop .cap-soko{ animation:sokoOpen .55s ease .55s forwards; }
+@keyframes futaOpen{
+  0%{ transform:translateY(0) rotate(0); opacity:1; }
+  60%{ transform:translateY(-48px) rotate(-14deg); opacity:1; }
+  100%{ transform:translateY(-70px) rotate(-22deg); opacity:0; }
+}
+@keyframes sokoOpen{
+  0%{ transform:translateY(0) rotate(0); opacity:1; }
+  60%{ transform:translateY(28px) rotate(7deg); opacity:1; }
+  100%{ transform:translateY(44px) rotate(11deg); opacity:0; }
 }
 .result-card{ opacity:0; animation:fadeInUp .4s ease .75s forwards; }
 @keyframes fadeInUp{from{opacity:0; transform:translateY(10px);} to{opacity:1; transform:translateY(0);}}
