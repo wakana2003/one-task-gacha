@@ -43,7 +43,7 @@ body{
 .app-header{ padding:22px 20px 8px; text-align:center; }
 .app-title{
   font-family:var(--font-display);
-  font-weight:700;
+  font-weight:800;
   font-size:26px;
   letter-spacing:.02em;
   margin:0;
@@ -175,7 +175,7 @@ body{
 }
 .modal-overlay.show{display:flex;}
 .modal-sheet{
-  width:100%; max-width:800px;
+  width:100%; max-width:700px;
   background:var(--panel);
   border:1px solid var(--panel-edge);
   border-top-left-radius:26px; border-top-right-radius:26px;
@@ -400,6 +400,7 @@ body{
   opacity:1;
   transform:translateX(-50%) translateY(0);
 }
+
 /* ---------- Confetti ---------- */
 .confetti{
   position:fixed;
