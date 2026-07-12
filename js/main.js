@@ -9,6 +9,16 @@ function switchTab(name) {
   document.querySelector(`.nav-btn[data-tab="${name}"]`).classList.add('active');
 }
 
+function playGachaSound() {
+  pullSound.currentTime = 0;
+  pullSound.play().catch(() => {});
+  setTimeout(() => {
+    pullSound.pause();
+    rollSound.currentTime = 0;
+    rollSound.play().catch(() => {});
+  }, 800);
+}
+
 // ---- 初期描画 ----
 renderMachine();
 renderCatChips();
@@ -28,6 +38,7 @@ document.querySelectorAll('.nav-btn').forEach(b => {
 
 $('pullBtn').onclick = () => {
   const machine = $('machineWrap');
+  playGachaSound();                 // ← 切り出した関数を呼ぶ
   machine.style.transition = 'transform .08s';
   machine.style.transform = 'translateX(-4px) rotate(-1deg)';
   setTimeout(() => { machine.style.transform = 'translateX(4px) rotate(1deg)'; }, 80);
@@ -36,7 +47,7 @@ $('pullBtn').onclick = () => {
 };
 
 $('startTaskBtn').onclick = startTimer;
-$('rerollBtn').onclick = pullGacha;
+$('rerollBtn').onclick = () => {playGachaSound();pullGacha();};
 $('skipBtn').onclick = () => {
   closeResultModal();
   toast('スキップしました。気が向いたらまた引いてね');

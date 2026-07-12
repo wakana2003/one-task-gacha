@@ -2,6 +2,11 @@
 // gacha.js — ガチャマシン・抽選・タイマー・完了
 // ============================================
 
+const pullSound = new Audio('music/ガチャガチャ・カプセルトイ.mp3');
+const rollSound = new Audio('music/小さい容器・開ける02.mp3'); 
+pullSound.volume = 0.6; 
+rollSound.volume = 0.6; 
+
 // ---- マシンのSVG描画 ----
 function renderMachine() {
   const wrap = $('machineWrap');
@@ -83,7 +88,7 @@ function pullGacha() {
     const picked = urgent[Math.floor(Math.random() * urgent.length)];
     currentPick = { id: picked.id, text: picked.text, minutes: picked.minutes, category: picked.category, isJackpot: false };
     showResultModal();
-    toast('<img src="icon/fukidashi_exclamation_yellow.png" alt="!"> 〆切のタスクだよ！今日中にやろう');
+    toast('<img src="icon/fukidashi_exclamation_yellow.png" alt="!" /> 〆切のタスクだよ！今日中にやろう');
     return;
   }
 
@@ -199,14 +204,11 @@ function completeCurrentTask() {
   st.todayCount += 1;
   save();
 
-  const wasOnTime = timerRemaining >= 0;
   $('completeEmoji').innerHTML =
     `<img src="${img}" alt="獲得したどうぶつ" class="get-img${isRare ? ' rare' : ''}">`;
   $('completeSub').textContent = isRare
     ? 'レアカプセルだ…！おつかれさま'
-    : (wasOnTime)
-    ? `wonderful！ 時間内に「${currentPick.text}」をやりきった！`
-    : `great！「${currentPick.text}」をやりきった！`;
+    : `「${currentPick.text}」やりきった！`;
   $('completeModal').classList.add('show');
   confetti(30);
   currentPick = null;
