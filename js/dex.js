@@ -57,7 +57,7 @@ function openAnimalModal(img, count, isRare) {
   imgEl.alt = animalName(img);
   imgEl.classList.toggle('rare', isRare);
   $('animalDetailName').textContent = animalName(img);
-  $('animalDetailBadge').textContent = isRare ? '✨ レアどうぶつ' : 'どうぶつ';
+  $('animalDetailBadge').textContent = isRare ? 'レアどうぶつ' : 'どうぶつ';
   $('animalDetailBadge').classList.toggle('rare', isRare);
   $('animalDetailCount').textContent = `これまでに ${count} 回 手に入れた`;
   renderTrophyShelf(count);

@@ -438,9 +438,9 @@ body{
   animation:dropIn .4s cubic-bezier(.3,1.4,.5,1);
 }
 .animal-detail-img.rare{ filter:drop-shadow(0 0 16px rgba(255,216,77,.8)); }
-.animal-detail-body{ margin-bottom:6px; }
+.animal-detail-body{ margin-bottom:6px;}
 .animal-detail-badge{ background:var(--panel-2); color:var(--text); }
-.animal-detail-badge.rare{ background:linear-gradient(90deg,var(--gold),#fff2b8); color:#3a2c00; }
+.animal-detail-badge.rare{ background:linear-gradient(90deg,var(--gold),#fff2b8); color:#3a2c00;}
 .animal-detail-count{
   font-family:var(--font-mono);
   font-size:14px;
@@ -559,4 +559,10 @@ body{
 @keyframes reviveGlow{
   0%,100%{ box-shadow:0 0 4px rgba(63,224,184,.4); }
   50%{ box-shadow:0 0 14px rgba(63,224,184,.95); }
+}
+/* 連打防止中のボタン */
+.btn:disabled{
+  opacity:.45;
+  cursor:not-allowed;
+  transform:none;
 }

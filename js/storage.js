@@ -218,7 +218,7 @@ const ANIMAL_NAMES = {
   'dot_animal_png/manulneko.png': 'マヌルネコ',
   'dot_animal_png/penguin_adeliepenguin.png': 'ペンギン（アデリーペンギン）',
   'dot_animal_png/hakucho_hina.png': 'ハクチョウ（ヒナ）',
-  // レア（大当たり産）
+  // 休憩
   'dot_animal_png/ryu.png': 'ドラゴン',
   'dot_animal_png/tora_whitetiger.png': 'トラ（ホワイトタイガー）',
   'dot_animal_png/hyo_kurohyo.png': 'ヒョウ（クロヒョウ）',
