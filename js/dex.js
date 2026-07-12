@@ -47,22 +47,24 @@ function renderDex() {
       <div class="dex-grid"></div>
     `;
     const grid = group.querySelector('.dex-grid');
-    pool.forEach(img => {
+    pool.forEach((img, i) => {
+      const isRareSlot = i === pool.length - 1; // 12個目はレア動物枠
       const key = cat.id + '|' + img;
       const filled = !!state.dex[key];
       const slot = document.createElement('div');
-      slot.className = 'dex-slot' + (filled ? ' filled' : '');
+      slot.className = 'dex-slot' + (filled ? ' filled' : '') + (isRareSlot ? ' rare-frame' : '');
       if (filled) {
-        slot.style.border = `1px solid ${cat.hex}55`;
+        if (!isRareSlot) slot.style.border = `1px solid ${cat.hex}55`;
         const el = document.createElement('img');
         el.src = img;
         el.alt = animalName(img);
         el.className = 'dex-img';
         slot.appendChild(el);
         slot.title = `${animalName(img)} × ${state.dex[key]}`;
-        slot.onclick = () => openAnimalModal(img, state.dex[key], false);
+        slot.onclick = () => openAnimalModal(img, state.dex[key], isRareSlot);
       } else {
-        slot.title = '未獲得';
+        if (isRareSlot) slot.textContent = '?';
+        slot.title = isRareSlot ? 'レア動物・未獲得' : '未獲得';
       }
       grid.appendChild(slot);
     });

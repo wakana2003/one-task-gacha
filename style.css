@@ -475,4 +475,14 @@ body{
   object-fit:contain;
   image-rendering:pixelated;
   vertical-align:middle;
+}/* ---------- カテゴリ図鑑のレア枠（12個目） ---------- */
+.dex-slot.rare-frame{
+  border:1px dashed var(--gold);
+  color:var(--gold);
+  font-weight:700;
+  font-size:16px;
+}
+.dex-slot.rare-frame.filled{
+  border:1px solid transparent;
+  background:linear-gradient(160deg,#ffe08a,var(--gold));
 }

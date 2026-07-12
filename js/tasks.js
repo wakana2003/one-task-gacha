@@ -135,8 +135,16 @@ function addTask() {
   const input = $('newTaskText');
   const text = input.value.trim();
   if (!text) { toast('タスクの内容を入力してください'); return; }
-  registerTask({ text, category: newTaskCat, minutes: newTaskTime, freq: 1, due: null });
+  const due = $('newTaskDue').value || null;         // 〆切（任意）
+  registerTask({
+    text,
+    category: newTaskCat,
+    minutes: newTaskTime,
+    freq: due ? 0 : 1,                               // 〆切あり = 一回きり
+    due,
+  });
   input.value = '';
+  $('newTaskDue').value = '';
   toast(`タスクを追加しました ${catIcon('icon/pen.png')}`);
 }
 
