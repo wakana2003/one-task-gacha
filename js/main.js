@@ -37,6 +37,7 @@ document.querySelectorAll('.nav-btn').forEach(b => {
 });
 
 $('pullBtn').onclick = () => {
+  if (poolForFilters().length === 0) return; // 引けるタスクがなければ音も演出も出さない（保険）
   const machine = $('machineWrap');
   playGachaSound();                 // ← 切り出した関数を呼ぶ
   machine.style.transition = 'transform .08s';

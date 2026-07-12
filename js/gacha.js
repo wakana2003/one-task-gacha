@@ -83,6 +83,14 @@ function weightedPick(pool) {
 function pullGacha() {
   const pool = poolForFilters();
 
+  // プールが空なら休憩タスクも含めて何も引けない（最初に判定）
+  if (!pool.length) {
+    toast(state.tasks.length === 0
+      ? 'まずはタスクを登録してください'
+      : 'その条件に合うタスクがありません。条件を変えてみましょう');
+    return;
+  }
+
   // 〆切が今日 or 過ぎているタスクは最優先で確定排出（大当たりよりも優先）
   const urgent = pool.filter(t => t.due && t.due <= todayISO());
   if (urgent.length) {
@@ -93,18 +101,14 @@ function pullGacha() {
     return;
   }
 
+  // 休憩タスク（大当たり）はプールに1件以上あるときだけ
   if (Math.random() < JACKPOT_CHANCE) {
     const lucky = LUCKY_TASKS[Math.floor(Math.random() * LUCKY_TASKS.length)];
     currentPick = { id: null, text: lucky.text, minutes: lucky.minutes, category: '休憩', isJackpot: true };
     showResultModal();
     return;
   }
-  if (!pool.length) {
-    toast(state.tasks.length === 0
-      ? 'まずはタスクを登録してください'
-      : 'その条件に合うタスクがありません。条件を変えてみましょう');
-    return;
-  }
+
   // 〆切が近いタスクほど当たりやすい重み付き抽選
   const picked = weightedPick(pool);
   currentPick = { id: picked.id, text: picked.text, minutes: picked.minutes, category: picked.category, isJackpot: false };

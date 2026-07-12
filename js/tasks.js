@@ -84,6 +84,7 @@ function updatePullHint() {
   $('pullHint').textContent = n
     ? `条件に合うタスクは ${n} 件。ランダムで1つ選びます`
     : 'この条件で引けるタスクがありません（時間やジャンルを変えてみて）';
+  $('pullBtn').disabled = n === 0; // 引けるタスクがなければボタンごと無効化
 }
 
 // ---- タスク一覧 ----
@@ -113,13 +114,27 @@ function renderTaskList() {
         <div class="task-text">${escapeHtml(t.text)}</div>
         <div class="task-tags">${tags}</div>
       </div>
+      ${due ? '' : `<button class="task-revive" data-id="${t.id}" title="今すぐ抽選対象に戻す">復活</button>`}
       <button class="task-edit" data-id="${t.id}" title="編集">${catIcon('icon/enpitsu_yellow.png')}</button>
       <button class="task-del" data-id="${t.id}" title="削除">✕</button>
     `;
+    const reviveBtn = row.querySelector('.task-revive');
+    if (reviveBtn) reviveBtn.onclick = () => reviveTask(t.id);
     row.querySelector('.task-edit').onclick = () => openEditModal(t.id);
     row.querySelector('.task-del').onclick = () => deleteTask(t.id);
     el.appendChild(row);
   });
+}
+
+// 休眠中のタスクを今すぐ抽選対象に戻す
+function reviveTask(id) {
+  const t = state.tasks.find(x => x.id === id);
+  if (!t) return;
+  t.nextDue = todayISO();   // freq や due は変更しない
+  save();
+  renderTaskList();
+  updatePullHint();
+  toast(`「${t.text}」が復活したよ！`);
 }
 
 function deleteTask(id) {
