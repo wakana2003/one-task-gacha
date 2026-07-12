@@ -426,6 +426,51 @@ body{
   color:var(--text-dim);
   margin:2px 0 4px;
 }
+.trophy-row{
+  display:flex;
+  justify-content:center;
+  gap:10px;
+  padding:4px 2px 2px;
+}
+.trophy-slot{
+  flex:1;
+  max-width:78px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:6px;
+  padding:10px 4px 8px;
+  border-radius:14px;
+  background:var(--bg-2);
+  border:1px dashed var(--panel-edge);
+  opacity:.45;
+  transition:.15s;
+}
+.trophy-slot.achieved{
+  opacity:1;
+  border:1px solid transparent;
+  animation:trophyPop .35s ease;
+}
+@keyframes trophyPop{
+  0%{transform:scale(.7);}
+  60%{transform:scale(1.12);}
+  100%{transform:scale(1);}
+}
+.trophy-icon{ font-size:26px; line-height:1; }
+.trophy-icon img{ width:26px; height:26px; object-fit:contain; image-rendering:pixelated; }
+.trophy-label{ font-size:10px; font-weight:700; color:var(--text-dim); }
+.trophy-slot.achieved .trophy-label{ color:var(--text); }
+.trophy-slot.bronze.achieved{ background:linear-gradient(160deg,#e3a874,#b8703c); box-shadow:0 0 12px rgba(184,112,60,.5); }
+.trophy-slot.silver.achieved{ background:linear-gradient(160deg,#f0f2f7,#b9c0cf); box-shadow:0 0 12px rgba(185,192,207,.55); }
+.trophy-slot.gold.achieved{ background:linear-gradient(160deg,#ffe08a,var(--gold)); box-shadow:0 0 14px rgba(255,216,77,.6); }
+.trophy-slot.gold.achieved .trophy-label{ color:#3a2c00; }
+.trophy-slot.platinum.achieved{ background:linear-gradient(160deg,#e3d8ff,#8ec5fc); box-shadow:0 0 16px rgba(142,197,252,.65); }
+.trophy-progress{
+  text-align:center;
+  font-size:12px;
+  color:var(--text-dim);
+  margin:10px 0 4px;
+}
 
 /* ---------- Confetti ---------- */
 .confetti{
