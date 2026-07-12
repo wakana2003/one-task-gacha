@@ -224,10 +224,9 @@ function animalName(img) {
 // ---- 獲得回数に応じたトロフィー段位 ----
 // icon を画像パスに差し替えれば <img> 表示に切り替わる（catIcon と同じ判定方式）
 const TROPHY_TIERS = [
-  { id: 'bronze',   threshold: 10,    label: 'ブロンズ',   icon: '🥉' },
-  { id: 'silver',   threshold: 100,   label: 'シルバー',   icon: '🥈' },
-  { id: 'gold',     threshold: 1000,  label: 'ゴールド',   icon: '🥇' },
-  { id: 'platinum', threshold: 10000, label: 'プラチナ',   icon: '🏆' },
+  { id: 'bronze',   threshold: 10,    label: 'ブロンズ', icon: 'icon/seihai_bronze.png' },
+  { id: 'silver',   threshold: 50,   label: 'シルバー', icon: 'icon/seihai_silver.png' },
+  { id: 'gold',     threshold: 100,  label: 'ゴールド', icon: 'icon/seihai_gold.png' },
 ];
 // 現在獲得している最高段位（なければ null）
 function currentTrophy(count) {

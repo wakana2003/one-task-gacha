@@ -99,7 +99,7 @@ function renderTrophyShelf(count) {
     const slot = document.createElement('div');
     slot.className = 'trophy-slot ' + t.id + (achieved ? ' achieved' : '');
     slot.innerHTML = `
-      <span class="trophy-icon">${achieved ? catIcon(t.icon) : '🔒'}</span>
+      <span class="trophy-icon">${achieved ? catIcon(t.icon) : catIcon('icon/key_silver.png')}</span>
       <span class="trophy-label">${t.label}</span>
     `;
     slot.title = achieved
