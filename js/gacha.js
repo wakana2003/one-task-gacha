@@ -11,17 +11,25 @@ rollSound.volume = 0.6;
 // ---- マシンのSVG描画 ----
 function renderMachine() {
   const wrap = $('machineWrap');
-  const colors = CATEGORIES.map(c => c.hex);
-  // const positions = [[95,150],[135,140],[175,150],[115,175],[155,178],[95,195],[175,198],[135,205]];
   const positions = [[75,140],[135,110],[195,140],[120,145],[155,140],[95,165],[175,168],[135,175],[99,120]];
+  const angles = [-180, 210, 25, -8, 15, -30, 150, 105, -12]; // ← 追加。各位置の傾き（度）
+  // カプセルの画像4種を順番に配置（positionsの数だけ繰り返す）
+  const capsuleImgs = [
+    'capsule/gacha_capsule_red_nl.png',
+    'capsule/gacha_capsule_blue_nl.png',
+    'capsule/gacha_capsule_green_nl.png',
+    'capsule/gacha_capsule_yellow_nl.png',
+  ];
+  const size = 34; // カプセル画像の表示サイズ（px）
   let capsules = '';
   positions.forEach((p, i) => {
-    const col = colors[i % colors.length];
-    capsules += `
-      <g class="capsule">
-        <circle cx="${p[0]}" cy="${p[1]}" r="15" fill="${col}" opacity="0.92"/>
-        <path d="M ${p[0]-15} ${p[1]} A 15 15 0 0 1 ${p[0]+15} ${p[1]}" fill="#ffffff" opacity="0.35"/>
-      </g>`;
+  const img = capsuleImgs[i % capsuleImgs.length];
+  const angle = angles[i] || 0;
+  capsules += `
+    <g class="capsule" transform="rotate(${angle} ${p[0]} ${p[1]})">
+      <image href="${img}" x="${p[0] - size / 2}" y="${p[1] - size / 2}"
+             width="${size}" height="${size}" style="image-rendering:pixelated;"/>
+    </g>`;
   });
   wrap.innerHTML = `
   <svg viewBox="0 0 270 330" xmlns="http://www.w3.org/2000/svg">
